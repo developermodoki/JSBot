@@ -1,6 +1,15 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const express_1 = __importDefault(require("express"));
+const app = (0, express_1.default)();
+app.get("/", (req, res) => {
+    res.send("Not found");
+});
+app.listen(5000);
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 client.on("ready", () => {
     console.log("This Bot is ready");
