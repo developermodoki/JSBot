@@ -32,5 +32,6 @@ jobs:
          git remote set-url origin https://github-actions${GITHUB_TOKEN}@github.com/JSBot
          git config --global user.name "developermodoki"
          git config --global user.email "developermodoki@noreply.github.com"
+         git add .
          git commit -m "Deploy"
-         git push origin deploy
+         git push origin HEAD:deploy
