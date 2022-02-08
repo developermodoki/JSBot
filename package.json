@@ -1,0 +1,34 @@
+{
+  "name": "jsbot",
+  "version": "1.0.0",
+  "description": "JavaScript Bot on Discord",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./dist/server.js",
+    "build": "tsc",
+    "test":"ts-node ./src/ts/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/developermodoki/JSBot.git"
+  },
+  "keywords": [
+    "discord",
+    "node.js",
+    "javascript"
+  ],
+  "author": "developermodoki",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/developermodoki/JSBot/issues"
+  },
+  "homepage": "https://github.com/developermodoki/JSBot#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  }
+}
