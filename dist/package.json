@@ -23,6 +23,7 @@
   "homepage": "https://github.com/developermodoki/JSBot#readme",
   "dependencies": {
     "discord.js": "^13.6.0",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "express":"^4.17.2"
   }
 }

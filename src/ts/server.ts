@@ -1,4 +1,11 @@
 import { Message,Client,Intents } from "discord.js";
+import express, { Request,Response } from "express";
+
+const app: express.Express = express();
+app.get("/",(req:Request, res:Response) => {
+    res.send("Not found");
+});
+app.listen(5000);
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
