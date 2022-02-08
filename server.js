@@ -9,7 +9,7 @@ const app = (0, express_1.default)();
 app.get("/", (req, res) => {
     res.send("Not found");
 });
-app.listen(5000);
+app.listen(process.env.PORT || 5000);
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 client.on("ready", () => {
     console.log("This Bot is ready");
