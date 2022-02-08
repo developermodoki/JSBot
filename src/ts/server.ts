@@ -8,7 +8,7 @@ client.on("ready",() => {
     console.log("This Bot is ready");
 });
 
-
+// message
 client.on("messageCreate",(message:Message) => {
     console.log("MESSAGE CREATED")
     if (message.author.bot) return;
