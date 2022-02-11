@@ -18,7 +18,7 @@ client.on("messageCreate",(message:Message) => {
 
     if (message.guild?.me?.permissions.has("SEND_MESSAGES")){
         if(message.content === "js" || message.content === "JS" || message.content === "JavaScript" || message.content === "javascript"){
-            const random:number = Math.floor(Math.random() * 2)
+            const random:number = Math.floor(Math.random() * 3)
             switch(random) {
                 case 0 :
                   message.reply("Yeah! JavaScript is very very AMAZING!!")
