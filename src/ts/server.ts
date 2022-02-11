@@ -6,14 +6,10 @@ client.on("ready",() => {
     console.log("This Bot is ready");
 });
 
-true ? console.log("fe") : console.log("fefe")
 
 // messages
 client.on("messageCreate",(message:Message) => {
     console.log("MESSAGE CREATED")
-    const returnUndefined = ():undefined => {
-        return;
-    }
 
     const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = message.guild?.emojis.cache.find(element => element.name === "JS");
@@ -24,7 +20,7 @@ client.on("messageCreate",(message:Message) => {
         if(message.content === "js" || message.content === "JS" || message.content === "JavaScript" || message.content === "javascript"){
             message.reply("Yeah! JavaScript is very very AMAZING!!!!!!");
         } else if(message.content.match(/js|JS|JavaScript|javascript/)) {
-            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : returnUndefined());
+            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void(0));
         }
         if(message.content === "java" || message.content === "Java") {
             message.reply("My big brother Java!!!!!!!")
