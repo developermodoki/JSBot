@@ -19,10 +19,13 @@ client.on("messageCreate", (message) => {
             switch (random) {
                 case 0:
                     message.reply("Yeah! JavaScript is very very AMAZING!!");
+                    break;
                 case 1:
                     message.reply("I'm JavaScript!!");
+                    break;
                 case 2:
-                    message.reply("Did you called me ?");
+                    message.reply("Did you called me?");
+                    break;
             }
         }
         else if (message.content.match(/js|JS|JavaScript|javascript/)) {
