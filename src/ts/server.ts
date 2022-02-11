@@ -1,4 +1,4 @@
-import { Message,Client,Intents } from "discord.js";
+import { Message,Client,Intents,process } from "discord.js";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
@@ -21,6 +21,9 @@ client.on("messageCreate",(message:Message) => {
     }
 });
 
+process.on('unhandledRejection', error => {
+	console.error('Unhandled promise rejection:', error);
+});
 
 
 client.login(process.env.DISCORD_TOKEN);
