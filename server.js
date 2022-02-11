@@ -15,7 +15,15 @@ client.on("messageCreate", (message) => {
         return;
     if ((_d = (_c = message.guild) === null || _c === void 0 ? void 0 : _c.me) === null || _d === void 0 ? void 0 : _d.permissions.has("SEND_MESSAGES")) {
         if (message.content === "js" || message.content === "JS" || message.content === "JavaScript" || message.content === "javascript") {
-            message.reply("Yeah! JavaScript is very very AMAZING!!!!!!");
+            const random = Math.floor(Math.random() * 2);
+            switch (random) {
+                case 0:
+                    message.reply("Yeah! JavaScript is very very AMAZING!!");
+                case 1:
+                    message.reply("I'm JavaScript!!");
+                case 2:
+                    message.reply("Did you called me ?");
+            }
         }
         else if (message.content.match(/js|JS|JavaScript|javascript/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void (0));
