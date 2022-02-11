@@ -6,15 +6,25 @@ client.on("ready",() => {
     console.log("This Bot is ready");
 });
 
+true ? console.log("fe") : console.log("fefe")
+
 // messages
 client.on("messageCreate",(message:Message) => {
     console.log("MESSAGE CREATED")
+    const returnUndefined = ():undefined => {
+        return;
+    }
+
+    const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
+    const findJSemoji2 = message.guild?.emojis.cache.find(element => element.name === "JS");
+
     if (message.author.bot) return;
+
     if (message.guild?.me?.permissions.has("SEND_MESSAGES")){
         if(message.content === "js" || message.content === "JS" || message.content === "JavaScript" || message.content === "javascript"){
             message.reply("Yeah! JavaScript is very very AMAZING!!!!!!");
         } else if(message.content.match(/js|JS|JavaScript|javascript/)) {
-            message.react(process.env.JS_EMOJI_ID as string);
+            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : returnUndefined());
         }
         if(message.content === "java" || message.content === "Java") {
             message.reply("My big brother Java!!!!!!!")
