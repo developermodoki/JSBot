@@ -5,14 +5,10 @@ const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GU
 client.on("ready", () => {
     console.log("This Bot is ready");
 });
-true ? console.log("fe") : console.log("fefe");
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
     console.log("MESSAGE CREATED");
-    const returnUndefined = () => {
-        return;
-    };
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = (_b = message.guild) === null || _b === void 0 ? void 0 : _b.emojis.cache.find(element => element.name === "JS");
     if (message.author.bot)
@@ -22,7 +18,7 @@ client.on("messageCreate", (message) => {
             message.reply("Yeah! JavaScript is very very AMAZING!!!!!!");
         }
         else if (message.content.match(/js|JS|JavaScript|javascript/)) {
-            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : returnUndefined());
+            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void (0));
         }
         if (message.content === "java" || message.content === "Java") {
             message.reply("My big brother Java!!!!!!!");
