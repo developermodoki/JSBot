@@ -1,4 +1,4 @@
-import { Message,Client,Intents } from "discord.js";
+import { Message,Client,Intents, WelcomeChannel } from "discord.js";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
@@ -18,7 +18,16 @@ client.on("messageCreate",(message:Message) => {
 
     if (message.guild?.me?.permissions.has("SEND_MESSAGES")){
         if(message.content === "js" || message.content === "JS" || message.content === "JavaScript" || message.content === "javascript"){
-            message.reply("Yeah! JavaScript is very very AMAZING!!!!!!");
+            const random:number = Math.floor(Math.random() * 2)
+            switch(random) {
+                case 0 :
+                  message.reply("Yeah! JavaScript is very very AMAZING!!")
+                case 1 : 
+                  message.reply("I'm JavaScript!!")
+                case 2 : 
+                  message.reply("Did you called me ?")
+            }
+
         } else if(message.content.match(/js|JS|JavaScript|javascript/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void(0));
         }
