@@ -2,6 +2,7 @@ import { Message,Client,Intents } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types";
+//import {}
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
 const commands = [
@@ -21,6 +22,14 @@ client.on("guildCreate",guild => {
         .then(() => console.log("Registred commands"))
         .catch(error => console.log("Failed registred commands"))
 })
+
+client.on("interactionCreate",inter => {
+    if(!inter.isCommand()) return;
+    if(inter.commandName === "js") {
+        const optStr = inter.options.getString;
+        
+    }
+});
 
 // messages
 client.on("messageCreate",(message:Message) => {
