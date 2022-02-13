@@ -7,9 +7,7 @@
   "description": "JavaScript Bot on Discord",
   "main": "server.js",
   "scripts": {
-    "start": "node ./dist/server.js",
-    "build": "tsc",
-    "test": "ts-node ./src/ts/server.ts"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
