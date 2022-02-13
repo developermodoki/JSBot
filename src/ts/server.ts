@@ -1,11 +1,26 @@
-import { Message,Client,Intents, WelcomeChannel } from "discord.js";
-
+import { Message,Client,Intents } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { REST } from "@discordjs/rest";
+import { Routes } from "discord-api-types";
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
+
+const commands = [
+    new SlashCommandBuilder().setName("js").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
+    new SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("word")),
+    new SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("word"))
+];
+
+const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
 
 client.on("ready",() => {
     console.log("This Bot is ready");
 });
 
+client.on("guildCreate",guild => {
+    rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
+        .then(() => console.log("Registred commands"))
+        .catch(error => console.log("Failed registred commands"))
+})
 
 // messages
 client.on("messageCreate",(message:Message) => {
