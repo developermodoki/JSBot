@@ -4,6 +4,7 @@ const discord_js_1 = require("discord.js");
 const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
 const discord_api_types_1 = require("discord-api-types");
+//import {}
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 const commands = [
     new builders_1.SlashCommandBuilder().setName("js").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
@@ -18,6 +19,13 @@ client.on("guildCreate", guild => {
     rest.put(discord_api_types_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
         .then(() => console.log("Registred commands"))
         .catch(error => console.log("Failed registred commands"));
+});
+client.on("interactionCreate", inter => {
+    if (!inter.isCommand())
+        return;
+    if (inter.commandName === "js") {
+        const optStr = inter.options.getString;
+    }
 });
 // messages
 client.on("messageCreate", (message) => {
