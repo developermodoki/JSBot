@@ -1,7 +1,7 @@
 import { Message,Client,Intents } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types";
+import { Routes } from "discord-api-types/v9";
 //import {}
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
