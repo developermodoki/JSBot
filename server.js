@@ -1,9 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
+const builders_1 = require("@discordjs/builders");
+const rest_1 = require("@discordjs/rest");
+const discord_api_types_1 = require("discord-api-types");
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
+const commands = [
+    new builders_1.SlashCommandBuilder().setName("js").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
+    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("word")),
+    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("word"))
+];
+const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
     console.log("This Bot is ready");
+});
+client.on("guildCreate", guild => {
+    rest.put(discord_api_types_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
+        .then(() => console.log("Registred commands"))
+        .catch(error => console.log("Failed registred commands"));
 });
 // messages
 client.on("messageCreate", (message) => {
