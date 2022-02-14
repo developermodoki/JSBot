@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
-const v9_1 = require("discord-api-types/v9");
-//import {}
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 const commands = [
     new builders_1.SlashCommandBuilder().setName("js").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
@@ -15,18 +13,36 @@ const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKE
 client.on("ready", () => {
     console.log("This Bot is ready");
 });
-client.on("guildCreate", guild => {
-    rest.put(v9_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
+/*
+client.on("guildCreate",guild => {
+    rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
         .then(() => console.log("Registred commands"))
-        .catch(error => console.log("Failed registred commands"));
-});
-client.on("interactionCreate", inter => {
-    if (!inter.isCommand())
-        return;
-    if (inter.commandName === "js") {
+        .catch(error => console.log("Failed registred commands"))
+})
+
+client.on("interactionCreate",inter => {
+    if(!inter.isCommand()) return;
+    if(inter.commandName === "js") {
         const optStr = inter.options.getString;
+        const context = vm.createContext();
+        vm.runInContext(`(outer) => {
+            globalThis.console = {
+             log(...args) {
+             outer.console.log(...args);
+            }
+          };
+        }`,context)({console});
+        try {
+            vm.runInContext(optStr as unknown as string,context);
+        } catch(e) {
+            
+        }
     }
 });
+
+IT'S DISABLED
+BECAUSE IT'S NOT DOING ENOUGH TESTING.
+*/
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
