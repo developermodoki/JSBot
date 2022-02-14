@@ -68,6 +68,13 @@ client.on("messageCreate", (message) => {
         }
         else if (message.content.match(/js|JS|JavaScript|javascript/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void (0));
+            try {
+                console.log("test");
+            }
+            catch (e) {
+                console.log(e);
+            }
+            ;
         }
         if (message.content === "java" || message.content === "Java") {
             message.reply("My big brother Java!!!!!!!");
