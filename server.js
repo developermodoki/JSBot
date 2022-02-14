@@ -37,7 +37,7 @@ client.on("ready", () => {
 client.on("guildCreate", guild => {
     rest.put(v9_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
         .then(() => console.log("Registred commands"))
-        .catch(error => console.log("Failed registred commands"));
+        .catch(error => console.log(error));
 });
 client.on("interactionCreate", inter => {
     if (!inter.isCommand())
