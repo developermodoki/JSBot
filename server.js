@@ -27,8 +27,8 @@ const vm = __importStar(require("vm"));
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 const commands = [
     new builders_1.SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
-    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackWord")),
-    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnWord"))
+    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackword")),
+    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnword"))
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
@@ -62,10 +62,10 @@ client.on("interactionCreate", inter => {
         }
     }
     if (inter.commandName === "searchstack") {
-        (inter.options.getString("stackWord") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackWord")}`) : void 0;
+        (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackWord")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
-        (inter.options.getString("mdnWord") !== null) ? inter.reply(`https://https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnWord")}`) : void 0;
+        (inter.options.getString("mdnword") !== null) ? inter.reply(`https://https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnWord")}`) : void 0;
     }
 });
 // messages
