@@ -2,7 +2,8 @@ import { Message,Client,Intents } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
-//import {}
+import * as vm from "vm";
+
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
 const commands = [
@@ -16,7 +17,7 @@ const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as st
 client.on("ready",() => {
     console.log("This Bot is ready");
 });
-
+/*
 client.on("guildCreate",guild => {
     rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
         .then(() => console.log("Registred commands"))
@@ -27,9 +28,25 @@ client.on("interactionCreate",inter => {
     if(!inter.isCommand()) return;
     if(inter.commandName === "js") {
         const optStr = inter.options.getString;
-        
+        const context = vm.createContext();
+        vm.runInContext(`(outer) => {
+            globalThis.console = {
+             log(...args) {
+             outer.console.log(...args);
+            }
+          };
+        }`,context)({console});
+        try {
+            vm.runInContext(optStr as unknown as string,context);
+        } catch(e) {
+            
+        }
     }
 });
+
+IT'S DISABLED 
+BECAUSE IT'S NOT DOING ENOUGH TESTING.
+*/
 
 // messages
 client.on("messageCreate",(message:Message) => {
