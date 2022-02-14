@@ -1,5 +1,5 @@
 import { Message,Client,Intents } from "discord.js";
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { codeBlock, SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import * as vm from "vm";
@@ -7,9 +7,9 @@ import * as vm from "vm";
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
 const commands = [
-    new SlashCommandBuilder().setName("js").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
-    new SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("word")),
-    new SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("word"))
+    new SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
+    new SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackWord")),
+    new SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnWord"))
 ];
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
@@ -17,7 +17,7 @@ const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as st
 client.on("ready",() => {
     console.log("This Bot is ready");
 });
-/*
+
 client.on("guildCreate",guild => {
     rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
         .then(() => console.log("Registred commands"))
@@ -27,26 +27,30 @@ client.on("guildCreate",guild => {
 client.on("interactionCreate",inter => {
     if(!inter.isCommand()) return;
     if(inter.commandName === "js") {
-        const optStr = inter.options.getString;
+        if (inter.options.getString("code") === null) return;
+        const optStr = inter.options.getString("code");
         const context = vm.createContext();
         vm.runInContext(`(outer) => {
             globalThis.console = {
              log(...args) {
              outer.console.log(...args);
             }
-          };
+          };getString
         }`,context)({console});
         try {
-            vm.runInContext(optStr as unknown as string,context);
+            inter.reply(codeBlock("js",vm.runInContext(optStr as unknown as string,context)));
         } catch(e) {
-            
+            inter.reply(codeBlock("js",e as string));
         }
+    }
+    if(inter.commandName === "searchstack") {
+        (inter.options.getString("stackWord") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackWord")}`) : void 0;
+    }
+    if(inter.commandName === "searchmdn") {
+        (inter.options.getString("mdnWord") !== null) ? inter.reply(`https://https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnWord")}`) : void 0;
     }
 });
 
-IT'S DISABLED 
-BECAUSE IT'S NOT DOING ENOUGH TESTING.
-*/
 
 // messages
 client.on("messageCreate",(message:Message) => {
@@ -73,7 +77,7 @@ client.on("messageCreate",(message:Message) => {
             }
 
         } else if(message.content.match(/js|JS|JavaScript|javascript/)) {
-            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void(0));
+            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
             try{ console.log("test") } catch(e) {console.log(e)};
         }
         if(message.content === "java" || message.content === "Java") {
