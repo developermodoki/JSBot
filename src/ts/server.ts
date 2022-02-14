@@ -8,8 +8,8 @@ const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_ME
 
 const commands = [
     new SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
-    new SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackWord")),
-    new SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnWord"))
+    new SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackword")),
+    new SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnword"))
 ];
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
@@ -44,10 +44,10 @@ client.on("interactionCreate",inter => {
         }
     }
     if(inter.commandName === "searchstack") {
-        (inter.options.getString("stackWord") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackWord")}`) : void 0;
+        (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackWord")}`) : void 0;
     }
     if(inter.commandName === "searchmdn") {
-        (inter.options.getString("mdnWord") !== null) ? inter.reply(`https://https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnWord")}`) : void 0;
+        (inter.options.getString("mdnword") !== null) ? inter.reply(`https://https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnWord")}`) : void 0;
     }
 });
 
