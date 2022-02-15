@@ -44,7 +44,7 @@ client.on("interactionCreate", inter => {
         return;
     if (inter.commandName === "runjs") {
         if (inter.options.getString("code") === null)
-            return;
+            console.log("null");
         const optStr = inter.options.getString("code");
         const context = vm.createContext();
         vm.runInContext(`(outer) => {
