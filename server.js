@@ -62,10 +62,10 @@ client.on("interactionCreate", inter => {
         }
     }
     if (inter.commandName === "searchstack") {
-        (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackWord")}`) : void 0;
+        (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
-        (inter.options.getString("mdnword") !== null) ? inter.reply(`https://https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnWord")}`) : void 0;
+        (inter.options.getString("mdnword") !== null) ? inter.reply(`https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnword")}`) : void 0;
     }
 });
 // messages
