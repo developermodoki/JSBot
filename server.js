@@ -58,6 +58,7 @@ client.on("interactionCreate", inter => {
             inter.reply((0, builders_1.codeBlock)("js", vm.runInContext(optStr, context)));
         }
         catch (e) {
+            console.log(e);
             inter.reply((0, builders_1.codeBlock)("js", e));
         }
     }
