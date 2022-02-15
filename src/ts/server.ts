@@ -35,7 +35,7 @@ client.on("interactionCreate",inter => {
              log(...args) {
              outer.console.log(...args);
             }
-          };getString
+          };
         }`,context)({console});
         try {
             inter.reply(codeBlock("js",vm.runInContext(optStr as unknown as string,context)));
