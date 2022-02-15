@@ -40,6 +40,7 @@ client.on("interactionCreate",inter => {
         try {
             inter.reply(codeBlock("js",vm.runInContext(optStr as unknown as string,context)));
         } catch(e) {
+            console.log(e);
             inter.reply(codeBlock("js",e as string));
         }
     }
