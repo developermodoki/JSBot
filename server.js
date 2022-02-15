@@ -26,9 +26,9 @@ const v9_1 = require("discord-api-types/v9");
 const vm = __importStar(require("vm"));
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 const commands = [
-    new builders_1.SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code")),
-    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackword")),
-    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnword"))
+    new builders_1.SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackword").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnword").setRequired(true))
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
