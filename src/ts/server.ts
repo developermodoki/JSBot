@@ -26,7 +26,7 @@ client.on("guildCreate",guild => {
 
 client.on("interactionCreate",inter => {
     if(!inter.isCommand()) return;
-    if(inter.commandName === "js") {
+    if(inter.commandName === "runjs") {
         if (inter.options.getString("code") === null) return;
         const optStr = inter.options.getString("code");
         const context = vm.createContext();
