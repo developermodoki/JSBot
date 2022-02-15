@@ -52,7 +52,7 @@ client.on("interactionCreate", inter => {
              log(...args) {
              outer.console.log(...args);
             }
-          };getString
+          };
         }`, context)({ console });
         try {
             inter.reply((0, builders_1.codeBlock)("js", vm.runInContext(optStr, context)));
