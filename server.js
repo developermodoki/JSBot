@@ -6,15 +6,19 @@ const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 const commands = [
-    new builders_1.SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("To search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("To search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true))
+    new builders_1.SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("Sarch Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true))
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
     console.log("This Bot is ready");
 });
 client.on("guildCreate", guild => {
+    var _a;
+    const checkJSemoji = guild.emojis.cache.find(element => element.name === "js");
+    const checkJSemoji2 = guild.emojis.cache.find(element => element.name === "JS");
+    checkJSemoji ? void 0 : (checkJSemoji2 ? void 0 : (((_a = guild.me) === null || _a === void 0 ? void 0 : _a.permissions.has("MANAGE_EMOJIS_AND_STICKERS")) ? guild.emojis.create("https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png", "js") : void 0));
     rest.put(v9_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
         .then(() => console.log("Registred commands"))
         .catch(error => console.log(error));
@@ -57,13 +61,6 @@ client.on("messageCreate", (message) => {
         }
         else if (message.content.match(/js|JS|JavaScript|javascript/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
-            try {
-                console.log("test");
-            }
-            catch (e) {
-                console.log(e);
-            }
-            ;
         }
         if (message.content === "java" || message.content === "Java") {
             message.reply("My big brother Java!!!!!!!");
