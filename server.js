@@ -1,29 +1,9 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
-const vm = __importStar(require("vm"));
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 const commands = [
     new builders_1.SlashCommandBuilder().setName("runjs").setDescription("To run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
@@ -43,24 +23,7 @@ client.on("interactionCreate", inter => {
     if (!inter.isCommand())
         return;
     if (inter.commandName === "runjs") {
-        if (inter.options.getString("code") === null)
-            console.log("null");
-        const optStr = inter.options.getString("code");
-        const context = vm.createContext();
-        vm.runInContext(`(outer) => {
-            globalThis.console = {
-             log(...args) {
-             outer.console.log(...args);
-            }
-          };
-        }`, context)({ console });
-        try {
-            inter.reply((0, builders_1.codeBlock)("js", vm.runInContext(optStr, context)));
-        }
-        catch (e) {
-            console.log(e);
-            inter.reply((0, builders_1.codeBlock)("js", e));
-        }
+        inter.reply("This feature is under development");
     }
     if (inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
