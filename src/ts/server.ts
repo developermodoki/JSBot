@@ -19,6 +19,9 @@ client.on("ready",() => {
 });
 
 client.on("guildCreate",guild => {
+    const checkJSemoji = guild.emojis.cache.find(element => element.name === "js");
+    const checkJSemoji2 = guild.emojis.cache.find(element => element.name === "JS");
+    checkJSemoji ? void 0 : (checkJSemoji2 ? void 0 : (guild.me?.permissions.has("MANAGE_EMOJIS_AND_STICKERS") ? guild.emojis.create("https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png","js") : void 0));
     rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
         .then(() => console.log("Registred commands"))
         .catch(error => console.log(error))
@@ -64,7 +67,6 @@ client.on("messageCreate",(message:Message) => {
 
         } else if(message.content.match(/js|JS|JavaScript|javascript/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
-            try{ console.log("test") } catch(e) {console.log(e)};
         }
         if(message.content === "java" || message.content === "Java") {
             message.reply("My big brother Java!!!!!!!")
