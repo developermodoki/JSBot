@@ -27,22 +27,7 @@ client.on("guildCreate",guild => {
 client.on("interactionCreate",inter => {
     if(!inter.isCommand()) return;
     if(inter.commandName === "runjs") {
-        if (inter.options.getString("code") === null) console.log("null");
-        const optStr = inter.options.getString("code");
-        const context = vm.createContext();
-        vm.runInContext(`(outer) => {
-            globalThis.console = {
-             log(...args) {
-             outer.console.log(...args);
-            }
-          };
-        }`,context)({console});
-        try {
-            inter.reply(codeBlock("js",vm.runInContext(optStr as unknown as string,context)));
-        } catch(e) {
-            console.log(e);
-            inter.reply(codeBlock("js",e as string));
-        }
+        inter.reply("This feature is under development");
     }
     if(inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
