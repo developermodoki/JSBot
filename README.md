@@ -15,6 +15,7 @@ DISCORD_TOKEN=(your token)
 ```
 3, run  
 ```
+npm install
 npm run build
 npm start
 ```
