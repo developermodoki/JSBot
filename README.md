@@ -1,5 +1,6 @@
 # JSBot
-JavaScriptを推進するDiscordボット
+JavaScriptを推進するDiscordボット  
+**NOTICE: This bot is still under development.**
 
 # How to use
 1, Append
