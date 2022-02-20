@@ -1,10 +1,38 @@
-import { Message,Client,Intents } from "discord.js";
+import { Message,Client,Intents, UserManager } from "discord.js";
 import { codeBlock, SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import * as vm from "vm";
+import * as jsdom from "jsdom";
+import axios from "axios";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
+
+interface mdnResponse {
+    document:Array<
+      {
+          mdn_url:string,
+          socre:number,
+          title:string,
+          locale:string,
+          slug:string,
+          popularity: number,
+          summary:string,
+          highlight: {
+              body: Array<string>,
+              title: Array<string>
+          },
+      }
+    >,
+    metadata: {
+        took_ms:number,
+        total: {value:number,relation:string},
+        size:number,
+        page:number
+    },
+    suggestions: Array<any>
+};
+
 
 const commands = [
     new SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
@@ -27,16 +55,46 @@ client.on("guildCreate",guild => {
         .catch(error => console.log(error))
 })
 
-client.on("interactionCreate",inter => {
+client.on("interactionCreate", async inter => {
+    
     if(!inter.isCommand()) return;
     if(inter.commandName === "runjs") {
-        inter.reply("This feature is under development");
-    }
+         await inter.channel?.send("This feature is under development");
+    } 
     if(inter.commandName === "searchstack") {
-        (inter.options.getString("stackword") !== null) ? inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
+        (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if(inter.commandName === "searchmdn") {
-        (inter.options.getString("mdnword") !== null) ? inter.reply(`https://developer.mozilla.org/ja/search?q=${inter.options.getString("mdnword")}`) : void 0;
+        let Success:boolean = false;
+        const mdnApiResponse = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
+        for (let i of mdnApiResponse.data.document) {
+            if (i.title === inter.options.getString("mdnword")) {
+                await inter.channel?.send({embeds:[{
+                    color:16776960,
+                    title:"Result",
+                    fields: [
+                        {
+                            name:i.title,
+                            value:i.summary
+                        }
+                    ]
+                }]})
+                Success = true;
+                break;
+            }
+            if(!Success) {
+                await inter.channel?.send({embeds: [{
+                    color:16776960,
+                    title:"Result",
+                    fields: [
+                        {
+                            name:"Not Found",
+                            value:"not exist"
+                        }
+                    ]
+                }]})
+            }
+        }
     }
 });
 
