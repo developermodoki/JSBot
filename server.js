@@ -48,6 +48,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
+        /* ↓ NOT WORKING */
         let Success = false;
         const mdnApiResponse = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const result = mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch"));
