@@ -9,7 +9,7 @@ import axios from "axios";
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
 interface mdnResponse {
-    document:Array<
+    documents:Array<
       {
           mdn_url:string,
           socre:number,
@@ -67,8 +67,7 @@ client.on("interactionCreate", async inter => {
     if(inter.commandName === "searchmdn") {
         let Success:boolean = false;
         const mdnApiResponse = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
-        console.log(mdnApiResponse.data)
-        const result = mdnApiResponse.data.document.find(element => element.title === inter.options.getString("mdnsearch"));
+        const result = mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch"));
         if (result) {
             await inter.channel?.send({embeds:[{
                 color:16776960,
