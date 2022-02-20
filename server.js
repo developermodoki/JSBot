@@ -50,33 +50,30 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (inter.commandName === "searchmdn") {
         let Success = false;
         const mdnApiResponse = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
-        for (let i of mdnApiResponse.data.document) {
-            if (i.title === inter.options.getString("mdnword")) {
-                yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
-                            color: 16776960,
-                            title: "Result",
-                            fields: [
-                                {
-                                    name: i.title,
-                                    value: i.summary
-                                }
-                            ]
-                        }] }));
-                Success = true;
-                break;
-            }
-            if (!Success) {
-                yield ((_c = inter.channel) === null || _c === void 0 ? void 0 : _c.send({ embeds: [{
-                            color: 16776960,
-                            title: "Result",
-                            fields: [
-                                {
-                                    name: "Not Found",
-                                    value: "not exist"
-                                }
-                            ]
-                        }] }));
-            }
+        const result = mdnApiResponse.data.document.find(element => element.title === inter.options.getString("mdnsearch"));
+        if (result) {
+            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
+                        color: 16776960,
+                        title: "Result",
+                        fields: [
+                            {
+                                name: result.title,
+                                value: result.summary
+                            }
+                        ]
+                    }] }));
+        }
+        else {
+            yield ((_c = inter.channel) === null || _c === void 0 ? void 0 : _c.send({ embeds: [{
+                        color: 16776960,
+                        title: "Result",
+                        fields: [
+                            {
+                                name: "Not Found",
+                                value: "not exist"
+                            }
+                        ]
+                    }] }));
         }
     }
 }));
