@@ -65,6 +65,7 @@ client.on("interactionCreate", async inter => {
         (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if(inter.commandName === "searchmdn") {
+        /* ↓ NOT WORKING */
         let Success:boolean = false;
         const mdnApiResponse = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const result = mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch"));
