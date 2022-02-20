@@ -67,33 +67,29 @@ client.on("interactionCreate", async inter => {
     if(inter.commandName === "searchmdn") {
         let Success:boolean = false;
         const mdnApiResponse = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
-        for (let i of mdnApiResponse.data.document) {
-            if (i.title === inter.options.getString("mdnword")) {
-                await inter.channel?.send({embeds:[{
-                    color:16776960,
-                    title:"Result",
-                    fields: [
-                        {
-                            name:i.title,
-                            value:i.summary
-                        }
-                    ]
-                }]})
-                Success = true;
-                break;
-            }
-            if(!Success) {
-                await inter.channel?.send({embeds: [{
-                    color:16776960,
-                    title:"Result",
-                    fields: [
-                        {
-                            name:"Not Found",
-                            value:"not exist"
-                        }
-                    ]
-                }]})
-            }
+        const result = mdnApiResponse.data.document.find(element => element.title === inter.options.getString("mdnsearch"));
+        if (result) {
+            await inter.channel?.send({embeds:[{
+                color:16776960,
+                title:"Result",
+                fields: [
+                    {
+                        name:result.title,
+                        value:result.summary
+                    }
+                ]
+            }]})
+        } else {
+            await inter.channel?.send({embeds: [{
+                color:16776960,
+                title:"Result",
+                fields: [
+                    {
+                        name:"Not Found",
+                        value:"not exist"
+                    }
+                ]
+            }]})
         }
     }
 });
