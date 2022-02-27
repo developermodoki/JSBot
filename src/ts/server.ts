@@ -106,25 +106,8 @@ client.on("messageCreate",(message:Message) => {
     if (message.author.bot) return;
 
     if (message.guild?.me?.permissions.has("SEND_MESSAGES")){
-        if(message.content === "js" || message.content === "JS" || message.content === "JavaScript" || message.content === "javascript"){
-            const random:number = Math.floor(Math.random() * 3)
-            switch(random) {
-                case 0 :
-                  message.reply("Yeah! JavaScript is very very AMAZING!!")
-                  break;
-                case 1 : 
-                  message.reply("I'm JavaScript!!")
-                  break;
-                case 2 : 
-                  message.reply("Did you called me?")
-                  break;
-            }
-
-        } else if(message.content.match(/js|JS|JavaScript|javascript/)) {
+        if(message.content.match(/js|JS|JavaScript|javascript/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
-        }
-        if(message.content === "java" || message.content === "Java") {
-            message.reply("My big brother Java!!!!!!!")
         }
     } else {
         return;
