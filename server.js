@@ -51,6 +51,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         /* ↓ NOT WORKING */
         let Success = false;
         const mdnApiResponse = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
+        console.log(JSON.stringify(mdnApiResponse));
         console.log(mdnApiResponse);
         console.log(mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch")));
         const result = mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch"));
