@@ -5,6 +5,7 @@ import { Routes } from "discord-api-types/v9";
 import * as vm from "vm";
 import * as jsdom from "jsdom";
 import axios from "axios";
+import fetch from "node-fetch";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 
@@ -68,6 +69,7 @@ client.on("interactionCreate", async inter => {
         /* ↓ NOT WORKING */
         let Success:boolean = false;
         const mdnApiResponse = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
+        console.log(JSON.stringify(mdnApiResponse));
         console.log(mdnApiResponse)
         console.log(mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch")));
         const result = mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch"));
