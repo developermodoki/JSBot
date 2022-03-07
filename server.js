@@ -50,11 +50,11 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (inter.commandName === "searchmdn") {
         /* ↓ NOT WORKING */
         let Success = false;
-        const mdnApiResponse = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
-        console.log(JSON.stringify(mdnApiResponse.data));
+        const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
+        const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         console.log(mdnApiResponse);
-        console.log(mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch")));
-        const result = mdnApiResponse.data.documents.find(element => element.title === inter.options.getString("mdnsearch"));
+        console.log(mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnsearch")));
+        const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnsearch"));
         if (result) {
             yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
                         color: 16776960,
