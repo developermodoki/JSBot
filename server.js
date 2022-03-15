@@ -63,7 +63,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                             },
                             {
                                 name: "URL",
-                                value: result.mdn_url
+                                value: "https://developer.mozilla.org" + result.mdn_url
                             }
                         ]
                     }] }));
