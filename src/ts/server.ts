@@ -54,9 +54,9 @@ client.on("guildCreate",guild => {
 })
 
 client.on("interactionCreate", async inter => {
-    
     if(!inter.isCommand()) return;
     if(inter.commandName === "runjs") {
+        /*
          const vm = new VM({timeout:1000});
          try {
             const result = vm.run(inter.options.getString("code") as string);
@@ -66,6 +66,7 @@ client.on("interactionCreate", async inter => {
          } catch(e) {
              await inter.channel?.send(e as string)
          }
+         */
          await inter.channel?.send("This feature is under development");
     } 
     if(inter.commandName === "searchstack") {
