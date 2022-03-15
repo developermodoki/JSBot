@@ -48,7 +48,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
-        (_b = inter.channel) === null || _b === void 0 ? void 0 : _b.sendTyping();
+        (_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send("Please wait...");
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
