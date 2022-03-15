@@ -46,12 +46,12 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         const vm = new vm2_1.VM({ timeout: 1000 });
         try {
             const result = vm.run(inter.options.getString("code"));
-            (_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send({
+            yield ((_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send({
                 content: result
-            });
+            }));
         }
         catch (e) {
-            (_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send(e);
+            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send(e));
         }
         yield ((_c = inter.channel) === null || _c === void 0 ? void 0 : _c.send("This feature is under development"));
     }
