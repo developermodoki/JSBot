@@ -59,6 +59,10 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                             {
                                 name: result.title,
                                 value: result.summary
+                            },
+                            {
+                                name: "URL",
+                                value: result.mdn_url
                             }
                         ]
                     }] }));
@@ -77,6 +81,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
 }));
+//const test = (/^([Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT])$/.test("JavaScript"))
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
