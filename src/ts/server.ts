@@ -64,7 +64,7 @@ client.on("interactionCreate", async inter => {
                 content:result
             })
          } catch(e) {
-
+             inter.channel?.send(e as string)
          }
          await inter.channel?.send("This feature is under development");
     } 
