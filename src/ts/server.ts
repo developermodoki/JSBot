@@ -60,11 +60,11 @@ client.on("interactionCreate", async inter => {
          const vm = new VM({timeout:1000});
          try {
             const result = vm.run(inter.options.getString("code") as string);
-            inter.channel?.send({
+            await inter.channel?.send({
                 content:result
             })
          } catch(e) {
-             inter.channel?.send(e as string)
+             await inter.channel?.send(e as string)
          }
          await inter.channel?.send("This feature is under development");
     } 
