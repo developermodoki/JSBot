@@ -17,6 +17,7 @@ const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
 const axios_1 = __importDefault(require("axios"));
+const vm2_1 = require("vm2");
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
 const commands = [
@@ -42,13 +43,21 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (!inter.isCommand())
         return;
     if (inter.commandName === "runjs") {
-        yield ((_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send("This feature is under development"));
+        const vm = new vm2_1.VM({ timeout: 1000 });
+        try {
+            const result = vm.run(inter.options.getString("code"));
+            (_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send({
+                content: result
+            });
+        }
+        catch (e) {
+        }
+        yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send("This feature is under development"));
     }
     if (inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
-        (_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send("Please wait...");
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
