@@ -5,7 +5,6 @@ import { Routes } from "discord-api-types/v9";
 import axios from "axios";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
-
 interface mdnResponse {
     documents:Array<
       {
@@ -68,8 +67,8 @@ client.on("interactionCreate", async inter => {
         const mdnRes = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data)) 
         console.log(mdnApiResponse)
-        console.log(mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnsearch")));
-        const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnsearch"));
+        console.log(mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword")));
+        const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         if (result) {
             await inter.channel?.send({embeds:[{
                 color:16776960,
