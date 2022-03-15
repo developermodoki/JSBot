@@ -3,6 +3,7 @@ import { codeBlock, SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import axios from "axios";
+import { VM } from "vm2";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
@@ -56,13 +57,21 @@ client.on("interactionCreate", async inter => {
     
     if(!inter.isCommand()) return;
     if(inter.commandName === "runjs") {
+         const vm = new VM({timeout:1000});
+         try {
+            const result = vm.run(inter.options.getString("code") as string);
+            inter.channel?.send({
+                content:result
+            })
+         } catch(e) {
+
+         }
          await inter.channel?.send("This feature is under development");
     } 
     if(inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if(inter.commandName === "searchmdn") {
-        inter.channel?.send("Please wait...");
         const mdnRes = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
