@@ -73,6 +73,10 @@ client.on("interactionCreate", async inter => {
                     {
                         name:result.title,
                         value:result.summary
+                    },
+                    {
+                        name:"URL",
+                        value:result.mdn_url
                     }
                 ]
             }]})
@@ -91,6 +95,7 @@ client.on("interactionCreate", async inter => {
     }
 });
 
+//const test = (/^([Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT])$/.test("JavaScript"))
 
 // messages
 client.on("messageCreate",(message:Message) => {
