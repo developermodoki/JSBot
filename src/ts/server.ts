@@ -62,11 +62,9 @@ client.on("interactionCreate", async inter => {
         (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if(inter.commandName === "searchmdn") {
-        /* ↓ NOT WORKING */
-        let Success:boolean = false;
         const mdnRes = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
-        const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data)) 
-        console.log(mdnApiResponse)
+        const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data));
+        console.log(mdnApiResponse);
         console.log(mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword")));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         if (result) {
@@ -106,7 +104,7 @@ client.on("messageCreate",(message:Message) => {
     if (message.author.bot) return;
 
     if (message.guild?.me?.permissions.has("SEND_MESSAGES")){
-        if(message.content.match(/js|JS|JavaScript|javascript/)) {
+        if(message.content.match(/[Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT]/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
         }
     } else {
