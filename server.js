@@ -48,8 +48,6 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
-        /* ↓ NOT WORKING */
-        let Success = false;
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         console.log(mdnApiResponse);
@@ -90,7 +88,7 @@ client.on("messageCreate", (message) => {
     if (message.author.bot)
         return;
     if ((_d = (_c = message.guild) === null || _c === void 0 ? void 0 : _c.me) === null || _d === void 0 ? void 0 : _d.permissions.has("SEND_MESSAGES")) {
-        if (message.content.match(/js|JS|JavaScript|javascript/)) {
+        if (message.content.match(/[Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT]/)) {
             findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
         }
     }
