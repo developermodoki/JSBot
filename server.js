@@ -21,7 +21,7 @@ const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GU
 ;
 const commands = [
     new builders_1.SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("Sarch Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
     new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true))
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
