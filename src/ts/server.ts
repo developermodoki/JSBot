@@ -77,7 +77,7 @@ client.on("interactionCreate", async inter => {
                     },
                     {
                         name:"URL",
-                        value:result.mdn_url
+                        value:"https://developer.mozilla.org" + result.mdn_url
                     }
                 ]
             }]})
