@@ -17,7 +17,6 @@ const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
 const axios_1 = __importDefault(require("axios"));
-const vm2_1 = require("vm2");
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
 const commands = [
@@ -39,21 +38,22 @@ client.on("guildCreate", guild => {
         .catch(error => console.log(error));
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c;
     if (!inter.isCommand())
         return;
     if (inter.commandName === "runjs") {
-        const vm = new vm2_1.VM({ timeout: 1000 });
-        try {
-            const result = vm.run(inter.options.getString("code"));
-            yield ((_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send({
-                content: result
-            }));
-        }
-        catch (e) {
-            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send(e));
-        }
-        yield ((_c = inter.channel) === null || _c === void 0 ? void 0 : _c.send("This feature is under development"));
+        /*
+         const vm = new VM({timeout:1000});
+         try {
+            const result = vm.run(inter.options.getString("code") as string);
+            await inter.channel?.send({
+                content:result
+            })
+         } catch(e) {
+             await inter.channel?.send(e as string)
+         }
+         */
+        yield ((_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send("This feature is under development"));
     }
     if (inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
@@ -63,7 +63,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         if (result) {
-            yield ((_d = inter.channel) === null || _d === void 0 ? void 0 : _d.send({ embeds: [{
+            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
                         color: 16776960,
                         title: "Result",
                         fields: [
@@ -79,7 +79,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                     }] }));
         }
         else {
-            yield ((_e = inter.channel) === null || _e === void 0 ? void 0 : _e.send({ embeds: [{
+            yield ((_c = inter.channel) === null || _c === void 0 ? void 0 : _c.send({ embeds: [{
                         color: 16776960,
                         title: "Result",
                         fields: [
