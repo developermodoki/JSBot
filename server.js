@@ -38,7 +38,7 @@ client.on("guildCreate", guild => {
         .catch(error => console.log(error));
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a, _b;
     if (!inter.isCommand())
         return;
     if (inter.commandName === "runjs") {
@@ -59,12 +59,11 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if (inter.commandName === "searchmdn") {
-        inter.deferReply();
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         if (result) {
-            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
+            yield inter.reply({ embeds: [{
                         color: 16776960,
                         title: "Result",
                         fields: [
@@ -77,10 +76,10 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                                 value: "https://developer.mozilla.org" + result.mdn_url
                             }
                         ]
-                    }] }));
+                    }] });
         }
         else {
-            yield ((_c = inter.channel) === null || _c === void 0 ? void 0 : _c.send({ embeds: [{
+            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
                         color: 16776960,
                         title: "Result",
                         fields: [
