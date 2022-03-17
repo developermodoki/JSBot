@@ -73,12 +73,11 @@ client.on("interactionCreate", async inter => {
         (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
     if(inter.commandName === "searchmdn") {
-        inter.deferReply();
         const mdnRes = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data));
         const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         if (result) {
-            await inter.channel?.send({embeds:[{
+            await inter.reply({embeds:[{
                 color:16776960,
                 title:"Result",
                 fields: [
