@@ -92,7 +92,7 @@ client.on("interactionCreate", async inter => {
                 ]
             }]})
         } else {
-            await inter.channel?.send({embeds: [{
+            await inter.reply({embeds: [{
                 color:16776960,
                 title:"Result",
                 fields: [
