@@ -38,7 +38,7 @@ client.on("guildCreate", guild => {
         .catch(error => console.log(error));
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     if (!inter.isCommand())
         return;
     if (inter.commandName === "runjs") {
@@ -79,7 +79,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                     }] });
         }
         else {
-            yield ((_b = inter.channel) === null || _b === void 0 ? void 0 : _b.send({ embeds: [{
+            yield inter.reply({ embeds: [{
                         color: 16776960,
                         title: "Result",
                         fields: [
@@ -88,7 +88,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                                 value: "not exist"
                             }
                         ]
-                    }] }));
+                    }] });
         }
     }
 }));
