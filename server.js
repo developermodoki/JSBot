@@ -60,7 +60,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (inter.commandName === "searchmdn") {
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
-        const result = mdnApiResponse.documents.find(element => element.title.indexOf(inter.options.getString("mdnword")) !== -1);
+        const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         if (result) {
             yield inter.reply({ embeds: [{
                         color: 16776960,
