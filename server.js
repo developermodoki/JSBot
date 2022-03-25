@@ -38,7 +38,6 @@ client.on("guildCreate", guild => {
         .catch(error => console.log(error));
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     if (!inter.isCommand())
         return;
     if (inter.commandName === "runjs") {
@@ -53,7 +52,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
              await inter.channel?.send(e as string)
          }
          */
-        yield ((_a = inter.channel) === null || _a === void 0 ? void 0 : _a.send("This feature is under development"));
+        yield inter.reply("This feature is under development");
     }
     if (inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
@@ -61,7 +60,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (inter.commandName === "searchmdn") {
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
-        const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
+        const result = mdnApiResponse.documents.find(element => element.title.indexOf(inter.options.getString("mdnword")) !== -1);
         if (result) {
             yield inter.reply({ embeds: [{
                         color: 16776960,
