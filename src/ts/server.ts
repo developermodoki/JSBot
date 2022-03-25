@@ -67,7 +67,7 @@ client.on("interactionCreate", async inter => {
              await inter.channel?.send(e as string)
          }
          */
-         await inter.channel?.send("This feature is under development");
+         await inter.reply("This feature is under development");
     } 
     if(inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
@@ -75,7 +75,7 @@ client.on("interactionCreate", async inter => {
     if(inter.commandName === "searchmdn") {
         const mdnRes = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data));
-        const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
+        const result = mdnApiResponse.documents.find(element => element.title.indexOf(inter.options.getString("mdnword") as string) !== -1);
         if (result) {
             await inter.reply({embeds:[{
                 color:16776960,
