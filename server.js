@@ -34,7 +34,7 @@ client.on("guildCreate", guild => {
     const checkJSemoji2 = guild.emojis.cache.find(element => element.name === "JS");
     checkJSemoji ? void 0 : (checkJSemoji2 ? void 0 : (((_a = guild.me) === null || _a === void 0 ? void 0 : _a.permissions.has("MANAGE_EMOJIS_AND_STICKERS")) ? guild.emojis.create("https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png", "js") : void 0));
     rest.put(v9_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
-        .then(() => console.log("Registred commands"))
+        .then(() => void 0)
         .catch(error => console.log(error));
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
