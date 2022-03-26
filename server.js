@@ -108,5 +108,8 @@ client.on("messageCreate", (message) => {
     else {
         return;
     }
+    if (message.content.indexOf(process.env.WARN_WORD) !== -1) {
+        message.channel.send(`**WARNING: "JS" means JavaScript. It doesn't mean ${process.env.WARN_WORD}**"`);
+    }
 });
 client.login(process.env.DISCORD_TOKEN);
