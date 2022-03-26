@@ -13,6 +13,7 @@ into "/src/server.ts"
 2, create ".env"  
 ```
 DISCORD_TOKEN=(your token)
+WARN_WORD=(any words)
 ```
 3, run  
 ```
