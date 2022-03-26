@@ -49,8 +49,8 @@ client.on("guildCreate",guild => {
     const checkJSemoji2 = guild.emojis.cache.find(element => element.name === "JS");
     checkJSemoji ? void 0 : (checkJSemoji2 ? void 0 : (guild.me?.permissions.has("MANAGE_EMOJIS_AND_STICKERS") ? guild.emojis.create("https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png","js") : void 0));
     rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
-        .then(() => console.log("Registred commands"))
-        .catch(error => console.log(error))
+        .then(() => void 0)
+        .catch(error => console.log(error));
 })
 
 client.on("interactionCreate", async inter => {
@@ -90,7 +90,7 @@ client.on("interactionCreate", async inter => {
                         value:"https://developer.mozilla.org" + result.mdn_url
                     }
                 ]
-            }]})
+            }]});
         } else {
             await inter.reply({embeds: [{
                 color:16776960,
@@ -101,7 +101,7 @@ client.on("interactionCreate", async inter => {
                         value:"not exist"
                     }
                 ]
-            }]})
+            }]});
         }
     }
 });
@@ -126,7 +126,7 @@ client.on("messageCreate",(message:Message) => {
     }
 
     if (message.content.indexOf(process.env.WARN_WORD as string) !== -1) {
-        message.channel.send(`**WARNING: "JS" means JavaScript. It doesn't mean ${process.env.WARN_WORD}**`)
+        message.channel.send(`**WARNING: "JS" means JavaScript. It doesn't mean ${process.env.WARN_WORD}**`);
     }
 });
 
