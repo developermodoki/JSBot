@@ -22,4 +22,4 @@ npm run build
 npm start
 ```
 # Acknowledgments
-This project using logo.js(https://github.com/voodootikigod/logo.js).
+This project is using logo.js(https://github.com/voodootikigod/logo.js).
