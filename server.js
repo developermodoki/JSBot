@@ -137,7 +137,9 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("banid")) });
-            bannedList = (yield db.collection("bannedList").doc("main").get()).data();
+            const changeData = db.collection("bannedList").doc("main");
+            const listChangeData = yield changeData.get();
+            bannedList = listChangeData.data();
         }
     }
     if (inter.commandName === "unbanuser") {
@@ -151,7 +153,9 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unbanid")) });
-            bannedList = (yield db.collection("bannedList").doc("main").get()).data();
+            const changeData = db.collection("bannedList").doc("main");
+            const listChangeData = yield changeData.get();
+            bannedList = listChangeData.data();
             console.log(bannedList);
         }
     }
