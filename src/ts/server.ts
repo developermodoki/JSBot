@@ -174,7 +174,6 @@ client.on("interactionCreate", async inter => {
 // messages
 client.on("messageCreate",(message:Message) => {
     if(ignoreList?.list.includes(message.author.id)) return;
-    console.log("MESSAGE CREATED")
 
     const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = message.guild?.emojis.cache.find(element => element.name === "JS");
