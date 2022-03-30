@@ -7,6 +7,10 @@ import { VM } from "vm2";
 import * as firebase from "firebase-admin";
 import { DocumentData, getFirestore } from "firebase-admin/firestore";
 
+
+interface firebaseData {
+    list: string[]
+}
 firebase.initializeApp({
     credential: firebase.credential.cert({
         projectId: process.env.FIREBASE_ID,
@@ -15,7 +19,6 @@ firebase.initializeApp({
     })
 });
 const db = getFirestore();
-
 
 let bannedList: DocumentData | undefined;
 
@@ -124,26 +127,30 @@ client.on("interactionCreate", async inter => {
     if(inter.commandName === "banuser") {
         if(inter.id !== process.env.ADMIN_ID) return;
         await inter.reply("OK");
-          const banData = db.collection("bannedList").doc("main");
+          const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
           if(!banDoc.exists) {
-              await banData.set({list:[inter.options.getString("banid")]});
+              await banData.set({list:[inter.options.getString("banid") as string]});
               bannedList = (await db.collection("bannedList").doc("main").get()).data();
           } else {
               await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("banid"))});
-              bannedList = (await db.collection("bannedList").doc("main").get()).data();
+              const changeData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+              const listChangeData = await changeData.get();
+              bannedList = listChangeData.data();
           }
       }
       if(inter.commandName === "unbanuser") {
         if(inter.id !== process.env.ADMIN_ID) return;
           await inter.reply("OK");
-          const banData = db.collection("bannedList").doc("main");
+          const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
           if(!banDoc.exists){
               void 0;
           } else {
               await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unbanid"))});
-              bannedList = (await db.collection("bannedList").doc("main").get()).data();
+              const changeData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+              const listChangeData = await changeData.get();
+              bannedList = listChangeData.data();
               console.log(bannedList);
             
           }
