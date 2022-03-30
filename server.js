@@ -73,7 +73,7 @@ client.on("guildCreate", guild => {
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
     if (!inter.isCommand())
         return;
-    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.includes(inter.user.id))
+    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.list.includes(inter.user.id))
         return;
     if (inter.commandName === "runjs") {
         /*
@@ -156,7 +156,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
-    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.includes(message.author.id))
+    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.list.includes(message.author.id))
         return;
     console.log("MESSAGE CREATED");
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
