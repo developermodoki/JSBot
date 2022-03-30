@@ -131,14 +131,20 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
     if (inter.commandName === "ignoreuser") {
-        if (inter.user.id !== process.env.ADMIN_ID || inter.options.getString("ignoreid") === process.env.ADMIN_ID)
-            return;
+        if (inter.user.id !== process.env.ADMIN_ID) {
+            yield inter.reply("You don't have permission to run this command.");
+        }
+        if (inter.options.getString("ignoreid") === process.env.ADMIN_ID) {
+            yield inter.reply("Can't ignore Admin");
+        }
         yield inter.reply("OK");
         const banData = db.collection("ignoreList").doc("main");
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
             yield banData.set({ list: [inter.options.getString("ignoreid")] });
-            ignoreList = (yield db.collection("ignoreList").doc("main").get()).data();
+            const changeData = db.collection("ignoreList").doc("main");
+            const listChangeData = yield changeData.get();
+            ignoreList = listChangeData.data();
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid")) });
@@ -148,8 +154,9 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
     if (inter.commandName === "unignoreuser") {
-        if (inter.user.id !== process.env.ADMIN_ID)
-            return;
+        if (inter.user.id !== process.env.ADMIN_ID) {
+            inter.reply("You don't have permission to run this command.");
+        }
         yield inter.reply("OK");
         const banData = db.collection("ignoreList").doc("main");
         const banDoc = yield banData.get();
