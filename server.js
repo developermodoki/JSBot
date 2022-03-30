@@ -54,8 +54,8 @@ const commands = [
     new builders_1.SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
     new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
     new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("banuser").setDescription("Ban any users(bot level)").addStringOption(opt => opt.setName("banid").setDescription("User ID").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("unbanuser").setDescription("Unban any users(bot level)").addStringOption(opt => opt.setName("unbanid").setDescription("User ID").setRequired(true))
+    new builders_1.SlashCommandBuilder().setName("ignoreuser").setDescription("Ban any users(bot level)").addStringOption(opt => opt.setName("ignoreid").setDescription("User ID").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("unignoreuser").setDescription("Unban any users(bot level)").addStringOption(opt => opt.setName("unignoreid").setDescription("User ID").setRequired(true))
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
@@ -125,35 +125,35 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                     }] });
         }
     }
-    if (inter.commandName === "banuser") {
-        if (inter.user.id !== process.env.ADMIN_ID || inter.options.getString("banid") === process.env.ADMIN_ID)
+    if (inter.commandName === "ignoreuser") {
+        if (inter.user.id !== process.env.ADMIN_ID || inter.options.getString("ignoreid") === process.env.ADMIN_ID)
             return;
         yield inter.reply("OK");
-        const banData = db.collection("bannedList").doc("main");
+        const banData = db.collection("ignoreList").doc("main");
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
-            yield banData.set({ list: [inter.options.getString("banid")] });
-            bannedList = (yield db.collection("bannedList").doc("main").get()).data();
+            yield banData.set({ list: [inter.options.getString("ignoreid")] });
+            bannedList = (yield db.collection("ignoreList").doc("main").get()).data();
         }
         else {
-            yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("banid")) });
-            const changeData = db.collection("bannedList").doc("main");
+            yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid")) });
+            const changeData = db.collection("ignoreList").doc("main");
             const listChangeData = yield changeData.get();
             bannedList = listChangeData.data();
         }
     }
-    if (inter.commandName === "unbanuser") {
+    if (inter.commandName === "unignoreuser") {
         if (inter.user.id !== process.env.ADMIN_ID)
             return;
         yield inter.reply("OK");
-        const banData = db.collection("bannedList").doc("main");
+        const banData = db.collection("ignoreList").doc("main");
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
             void 0;
         }
         else {
-            yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unbanid")) });
-            const changeData = db.collection("bannedList").doc("main");
+            yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid")) });
+            const changeData = db.collection("ignoreList").doc("main");
             const listChangeData = yield changeData.get();
             bannedList = listChangeData.data();
             console.log(bannedList);
