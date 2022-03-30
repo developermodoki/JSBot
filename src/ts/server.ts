@@ -52,8 +52,8 @@ const commands = [
     new SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
     new SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
     new SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true)),
-    new SlashCommandBuilder().setName("banuser").setDescription("Ban any users(bot level)").addStringOption(opt => opt.setName("banid").setDescription("User ID").setRequired(true)),
-    new SlashCommandBuilder().setName("unbanuser").setDescription("Unban any users(bot level)").addStringOption(opt => opt.setName("unbanid").setDescription("User ID").setRequired(true))
+    new SlashCommandBuilder().setName("ignoreuser").setDescription("Ban any users(bot level)").addStringOption(opt => opt.setName("ignoreid").setDescription("User ID").setRequired(true)),
+    new SlashCommandBuilder().setName("unignoreuser").setDescription("Unban any users(bot level)").addStringOption(opt => opt.setName("unignoreid").setDescription("User ID").setRequired(true))
 ];
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
@@ -123,31 +123,31 @@ client.on("interactionCreate", async inter => {
             }]});
         }
     }
-    if(inter.commandName === "banuser") {
-        if(inter.user.id !== process.env.ADMIN_ID || inter.options.getString("banid") === process.env.ADMIN_ID) return;
+    if(inter.commandName === "ignoreuser") {
+        if(inter.user.id !== process.env.ADMIN_ID || inter.options.getString("ignoreid") === process.env.ADMIN_ID) return;
         await inter.reply("OK");
-          const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+          const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
           if(!banDoc.exists) {
-              await banData.set({list:[inter.options.getString("banid") as string]});
-              bannedList = (await db.collection("bannedList").doc("main").get()).data();
+              await banData.set({list:[inter.options.getString("ignoreid") as string]});
+              bannedList = (await db.collection("ignoreList").doc("main").get()).data();
           } else {
-              await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("banid"))});
-              const changeData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+              await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid"))});
+              const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
               const listChangeData = await changeData.get();
               bannedList = listChangeData.data();
           }
       }
-      if(inter.commandName === "unbanuser") {
+      if(inter.commandName === "unignoreuser") {
         if(inter.user.id !== process.env.ADMIN_ID) return;
           await inter.reply("OK");
-          const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+          const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
           if(!banDoc.exists){
               void 0;
           } else {
-              await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unbanid"))});
-              const changeData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+              await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
+              const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
               const listChangeData = await changeData.get();
               bannedList = listChangeData.data();
               console.log(bannedList);
