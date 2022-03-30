@@ -19,7 +19,12 @@ firebase.initializeApp({
 });
 const db = getFirestore();
 
-let bannedList: DocumentData | undefined;
+let ignoreList: DocumentData | undefined;
+(async () => {
+    const initData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+    const listInitData = await initData.get();
+    let ignoreList = listInitData.data();
+})();
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
@@ -73,7 +78,7 @@ client.on("guildCreate",guild => {
 
 client.on("interactionCreate", async inter => {
     if(!inter.isCommand()) return;
-    if(bannedList?.list.includes(inter.user.id)) return;
+    if(ignoreList?.list.includes(inter.user.id)) return;
     if(inter.commandName === "runjs") {
         /*
          const vm = new VM({timeout:1000});
@@ -130,12 +135,12 @@ client.on("interactionCreate", async inter => {
           const banDoc = await banData.get();
           if(!banDoc.exists) {
               await banData.set({list:[inter.options.getString("ignoreid") as string]});
-              bannedList = (await db.collection("ignoreList").doc("main").get()).data();
+              ignoreList = (await db.collection("ignoreList").doc("main").get()).data();
           } else {
               await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid"))});
               const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
               const listChangeData = await changeData.get();
-              bannedList = listChangeData.data();
+              ignoreList = listChangeData.data();
           }
       }
       if(inter.commandName === "unignoreuser") {
@@ -149,8 +154,8 @@ client.on("interactionCreate", async inter => {
               await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
               const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
               const listChangeData = await changeData.get();
-              bannedList = listChangeData.data();
-              console.log(bannedList);
+              ignoreList = listChangeData.data();
+              console.log(ignoreList);
           }
       }
 });
@@ -159,7 +164,7 @@ client.on("interactionCreate", async inter => {
 
 // messages
 client.on("messageCreate",(message:Message) => {
-    if(bannedList?.list.includes(message.author.id)) return;
+    if(ignoreList?.list.includes(message.author.id)) return;
     console.log("MESSAGE CREATED")
 
     const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
