@@ -41,9 +41,9 @@ const firebase = __importStar(require("firebase-admin"));
 const firestore_1 = require("firebase-admin/firestore");
 firebase.initializeApp({
     credential: firebase.credential.cert({
-        projectId: process.env["FIREBASE_ID"],
-        clientEmail: process.env["FIREBASE_CLIENT"],
-        privateKey: (_a = process.env["FIREBASE_KEY"]) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, '\n')
+        projectId: process.env.FIREBASE_ID,
+        clientEmail: process.env.FIREBASE_CLIENT,
+        privateKey: (_a = process.env.FIREBASE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, '\n')
     })
 });
 const db = (0, firestore_1.getFirestore)();
@@ -126,6 +126,8 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
     if (inter.commandName === "banuser") {
+        if (inter.id !== process.env.ADMIN_ID)
+            return;
         yield inter.reply("OK");
         const banData = db.collection("bannedList").doc("main");
         const banDoc = yield banData.get();
@@ -139,6 +141,8 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
     if (inter.commandName === "unbanuser") {
+        if (inter.id !== process.env.ADMIN_ID)
+            return;
         yield inter.reply("OK");
         const banData = db.collection("bannedList").doc("main");
         const banDoc = yield banData.get();
