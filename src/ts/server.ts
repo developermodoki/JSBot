@@ -1,9 +1,23 @@
-import { Message,Client,Intents, UserManager } from "discord.js";
-import { codeBlock, SlashCommandBuilder } from "@discordjs/builders";
+import { Message,Client,Intents } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import axios from "axios";
 import { VM } from "vm2";
+import * as firebase from "firebase-admin";
+import { DocumentData, getFirestore } from "firebase-admin/firestore";
+
+firebase.initializeApp({
+    credential: firebase.credential.cert({
+        projectId: process.env["FIREBASE_ID"],
+        clientEmail: process.env["FIREBASE_CLIENT"],
+        privateKey: process.env["FIREBASE_KEY"]?.replace(/\\n/g, '\n')
+    })
+});
+const db = getFirestore();
+
+
+let bannedList: DocumentData | undefined;
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
@@ -35,7 +49,9 @@ interface mdnResponse {
 const commands = [
     new SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
     new SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
-    new SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true))
+    new SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true)),
+    new SlashCommandBuilder().setName("banuser").setDescription("Ban any users(bot level)").addStringOption(opt => opt.setName("banid").setDescription("User ID").setRequired(true)),
+    new SlashCommandBuilder().setName("unbanuser").setDescription("Unban any users(bot level)").addStringOption(opt => opt.setName("unbanid").setDescription("User ID").setRequired(true))
 ];
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
@@ -55,6 +71,7 @@ client.on("guildCreate",guild => {
 
 client.on("interactionCreate", async inter => {
     if(!inter.isCommand()) return;
+    if(bannedList?.includes(inter.user.id)) return;
     if(inter.commandName === "runjs") {
         /*
          const vm = new VM({timeout:1000});
@@ -104,12 +121,38 @@ client.on("interactionCreate", async inter => {
             }]});
         }
     }
+    if(inter.commandName === "banuser") {
+        await inter.reply("OK");
+          const banData = db.collection("bannedList").doc("main");
+          const banDoc = await banData.get();
+          if(!banDoc.exists) {
+              await banData.set({list:[inter.options.getString("banid")]});
+              bannedList = (await db.collection("bannedList").doc("main").get()).data();
+          } else {
+              await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("banid"))});
+              bannedList = (await db.collection("bannedList").doc("main").get()).data();
+          }
+      }
+      if(inter.commandName === "unbanuser") {
+          await inter.reply("OK");
+          const banData = db.collection("bannedList").doc("main");
+          const banDoc = await banData.get();
+          if(!banDoc.exists){
+              void 0;
+          } else {
+              await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unbanid"))});
+              bannedList = (await db.collection("bannedList").doc("main").get()).data();
+              console.log(bannedList);
+            
+          }
+      }
 });
 
 //const test = (/^([Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT])$/.test("JavaScript"))
 
 // messages
 client.on("messageCreate",(message:Message) => {
+    if(bannedList?.includes(message.author.id)) return;
     console.log("MESSAGE CREATED")
 
     const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
