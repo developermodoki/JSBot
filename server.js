@@ -178,7 +178,6 @@ client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
     if (ignoreList === null || ignoreList === void 0 ? void 0 : ignoreList.list.includes(message.author.id))
         return;
-    console.log("MESSAGE CREATED");
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = (_b = message.guild) === null || _b === void 0 ? void 0 : _b.emojis.cache.find(element => element.name === "JS");
     if (message.author.bot)
