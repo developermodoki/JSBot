@@ -126,7 +126,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
     if (inter.commandName === "banuser") {
-        if (inter.id !== process.env.ADMIN_ID)
+        if (inter.user.id !== process.env.ADMIN_ID)
             return;
         yield inter.reply("OK");
         const banData = db.collection("bannedList").doc("main");
@@ -143,7 +143,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
     }
     if (inter.commandName === "unbanuser") {
-        if (inter.id !== process.env.ADMIN_ID)
+        if (inter.user.id !== process.env.ADMIN_ID)
             return;
         yield inter.reply("OK");
         const banData = db.collection("bannedList").doc("main");
