@@ -9,9 +9,9 @@ import { DocumentData, getFirestore } from "firebase-admin/firestore";
 
 firebase.initializeApp({
     credential: firebase.credential.cert({
-        projectId: process.env["FIREBASE_ID"],
-        clientEmail: process.env["FIREBASE_CLIENT"],
-        privateKey: process.env["FIREBASE_KEY"]?.replace(/\\n/g, '\n')
+        projectId: process.env.FIREBASE_ID,
+        clientEmail: process.env.FIREBASE_CLIENT,
+        privateKey: process.env.FIREBASE_KEY?.replace(/\\n/g, '\n')
     })
 });
 const db = getFirestore();
@@ -122,6 +122,7 @@ client.on("interactionCreate", async inter => {
         }
     }
     if(inter.commandName === "banuser") {
+        if(inter.id !== process.env.ADMIN_ID) return;
         await inter.reply("OK");
           const banData = db.collection("bannedList").doc("main");
           const banDoc = await banData.get();
@@ -134,6 +135,7 @@ client.on("interactionCreate", async inter => {
           }
       }
       if(inter.commandName === "unbanuser") {
+        if(inter.id !== process.env.ADMIN_ID) return;
           await inter.reply("OK");
           const banData = db.collection("bannedList").doc("main");
           const banDoc = await banData.get();
