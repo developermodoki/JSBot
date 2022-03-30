@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -11,18 +30,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
 const axios_1 = __importDefault(require("axios"));
+const firebase = __importStar(require("firebase-admin"));
+const firestore_1 = require("firebase-admin/firestore");
+firebase.initializeApp({
+    credential: firebase.credential.cert({
+        projectId: process.env["FIREBASE_ID"],
+        clientEmail: process.env["FIREBASE_CLIENT"],
+        privateKey: (_a = process.env["FIREBASE_KEY"]) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, '\n')
+    })
+});
+const db = (0, firestore_1.getFirestore)();
+let bannedList;
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
 const commands = [
     new builders_1.SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
     new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true))
+    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("banuser").setDescription("Ban any users(bot level)").addStringOption(opt => opt.setName("banid").setDescription("User ID").setRequired(true)),
+    new builders_1.SlashCommandBuilder().setName("unbanuser").setDescription("Unban any users(bot level)").addStringOption(opt => opt.setName("unbanid").setDescription("User ID").setRequired(true))
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
@@ -39,6 +72,8 @@ client.on("guildCreate", guild => {
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
     if (!inter.isCommand())
+        return;
+    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.includes(inter.user.id))
         return;
     if (inter.commandName === "runjs") {
         /*
@@ -90,11 +125,39 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                     }] });
         }
     }
+    if (inter.commandName === "banuser") {
+        yield inter.reply("OK");
+        const banData = db.collection("bannedList").doc("main");
+        const banDoc = yield banData.get();
+        if (!banDoc.exists) {
+            yield banData.set({ list: [inter.options.getString("banid")] });
+            bannedList = (yield db.collection("bannedList").doc("main").get()).data();
+        }
+        else {
+            yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("banid")) });
+            bannedList = (yield db.collection("bannedList").doc("main").get()).data();
+        }
+    }
+    if (inter.commandName === "unbanuser") {
+        yield inter.reply("OK");
+        const banData = db.collection("bannedList").doc("main");
+        const banDoc = yield banData.get();
+        if (!banDoc.exists) {
+            void 0;
+        }
+        else {
+            yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unbanid")) });
+            bannedList = (yield db.collection("bannedList").doc("main").get()).data();
+            console.log(bannedList);
+        }
+    }
 }));
 //const test = (/^([Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT])$/.test("JavaScript"))
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
+    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.includes(message.author.id))
+        return;
     console.log("MESSAGE CREATED");
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = (_b = message.guild) === null || _b === void 0 ? void 0 : _b.emojis.cache.find(element => element.name === "JS");
