@@ -125,7 +125,7 @@ client.on("interactionCreate", async inter => {
         }
     }
     if(inter.commandName === "banuser") {
-        if(inter.id !== process.env.ADMIN_ID) return;
+        if(inter.user.id !== process.env.ADMIN_ID) return;
         await inter.reply("OK");
           const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
@@ -140,7 +140,7 @@ client.on("interactionCreate", async inter => {
           }
       }
       if(inter.commandName === "unbanuser") {
-        if(inter.id !== process.env.ADMIN_ID) return;
+        if(inter.user.id !== process.env.ADMIN_ID) return;
           await inter.reply("OK");
           const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
