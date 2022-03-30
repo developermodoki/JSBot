@@ -47,7 +47,12 @@ firebase.initializeApp({
     })
 });
 const db = (0, firestore_1.getFirestore)();
-let bannedList;
+let ignoreList;
+(() => __awaiter(void 0, void 0, void 0, function* () {
+    const initData = db.collection("ignoreList").doc("main");
+    const listInitData = yield initData.get();
+    let ignoreList = listInitData.data();
+}))();
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
 const commands = [
@@ -73,7 +78,7 @@ client.on("guildCreate", guild => {
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
     if (!inter.isCommand())
         return;
-    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.list.includes(inter.user.id))
+    if (ignoreList === null || ignoreList === void 0 ? void 0 : ignoreList.list.includes(inter.user.id))
         return;
     if (inter.commandName === "runjs") {
         /*
@@ -133,13 +138,13 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
             yield banData.set({ list: [inter.options.getString("ignoreid")] });
-            bannedList = (yield db.collection("ignoreList").doc("main").get()).data();
+            ignoreList = (yield db.collection("ignoreList").doc("main").get()).data();
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid")) });
             const changeData = db.collection("ignoreList").doc("main");
             const listChangeData = yield changeData.get();
-            bannedList = listChangeData.data();
+            ignoreList = listChangeData.data();
         }
     }
     if (inter.commandName === "unignoreuser") {
@@ -155,8 +160,8 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
             yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid")) });
             const changeData = db.collection("ignoreList").doc("main");
             const listChangeData = yield changeData.get();
-            bannedList = listChangeData.data();
-            console.log(bannedList);
+            ignoreList = listChangeData.data();
+            console.log(ignoreList);
         }
     }
 }));
@@ -164,7 +169,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
-    if (bannedList === null || bannedList === void 0 ? void 0 : bannedList.list.includes(message.author.id))
+    if (ignoreList === null || ignoreList === void 0 ? void 0 : ignoreList.list.includes(message.author.id))
         return;
     console.log("MESSAGE CREATED");
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
