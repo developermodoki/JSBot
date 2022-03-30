@@ -129,13 +129,20 @@ client.on("interactionCreate", async inter => {
         }
     }
     if(inter.commandName === "ignoreuser") {
-        if(inter.user.id !== process.env.ADMIN_ID || inter.options.getString("ignoreid") === process.env.ADMIN_ID) return;
+        if(inter.user.id !== process.env.ADMIN_ID){
+            await inter.reply("You don't have permission to run this command.");
+        }
+        if(inter.options.getString("ignoreid") === process.env.ADMIN_ID) {
+            await inter.reply("Can't ignore Admin");
+        }
         await inter.reply("OK");
           const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
           if(!banDoc.exists) {
               await banData.set({list:[inter.options.getString("ignoreid") as string]});
-              ignoreList = (await db.collection("ignoreList").doc("main").get()).data();
+              const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+              const listChangeData = await changeData.get();
+              ignoreList = listChangeData.data();
           } else {
               await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid"))});
               const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
@@ -143,20 +150,22 @@ client.on("interactionCreate", async inter => {
               ignoreList = listChangeData.data();
           }
       }
-      if(inter.commandName === "unignoreuser") {
-        if(inter.user.id !== process.env.ADMIN_ID) return;
-          await inter.reply("OK");
-          const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-          const banDoc = await banData.get();
-          if(!banDoc.exists){
-              void 0;
-          } else {
-              await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
-              const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-              const listChangeData = await changeData.get();
-              ignoreList = listChangeData.data();
-              console.log(ignoreList);
-          }
+    if(inter.commandName === "unignoreuser") {
+        if(inter.user.id !== process.env.ADMIN_ID) {
+            inter.reply("You don't have permission to run this command.");
+        }
+        await inter.reply("OK");
+        const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+        const banDoc = await banData.get();
+        if(!banDoc.exists){
+            void 0;
+        } else {
+            await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
+            const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+            const listChangeData = await changeData.get();
+            ignoreList = listChangeData.data();
+            console.log(ignoreList);
+        }
       }
 });
 
