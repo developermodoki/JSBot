@@ -71,7 +71,7 @@ client.on("guildCreate",guild => {
 
 client.on("interactionCreate", async inter => {
     if(!inter.isCommand()) return;
-    if(bannedList?.includes(inter.user.id)) return;
+    if(bannedList?.list.includes(inter.user.id)) return;
     if(inter.commandName === "runjs") {
         /*
          const vm = new VM({timeout:1000});
@@ -152,7 +152,7 @@ client.on("interactionCreate", async inter => {
 
 // messages
 client.on("messageCreate",(message:Message) => {
-    if(bannedList?.includes(message.author.id)) return;
+    if(bannedList?.list.includes(message.author.id)) return;
     console.log("MESSAGE CREATED")
 
     const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
