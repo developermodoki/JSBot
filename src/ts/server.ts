@@ -7,7 +7,6 @@ import { VM } from "vm2";
 import * as firebase from "firebase-admin";
 import { DocumentData, getFirestore } from "firebase-admin/firestore";
 
-
 interface firebaseData {
     list: string[]
 }
@@ -125,7 +124,7 @@ client.on("interactionCreate", async inter => {
         }
     }
     if(inter.commandName === "banuser") {
-        if(inter.user.id !== process.env.ADMIN_ID) return;
+        if(inter.user.id !== process.env.ADMIN_ID || inter.options.getString("banid") === process.env.ADMIN_ID) return;
         await inter.reply("OK");
           const banData = db.collection("bannedList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
           const banDoc = await banData.get();
@@ -152,7 +151,6 @@ client.on("interactionCreate", async inter => {
               const listChangeData = await changeData.get();
               bannedList = listChangeData.data();
               console.log(bannedList);
-            
           }
       }
 });
