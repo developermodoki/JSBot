@@ -6,26 +6,8 @@ import axios from "axios";
 import { VM } from "vm2";
 import * as firebase from "firebase-admin";
 import { DocumentData, getFirestore } from "firebase-admin/firestore";
-
-interface firebaseData {
-    list: string[]
-}
-firebase.initializeApp({
-    credential: firebase.credential.cert({
-        projectId: process.env.FIREBASE_ID,
-        clientEmail: process.env.FIREBASE_CLIENT,
-        privateKey: process.env.FIREBASE_KEY?.replace(/\\n/g, '\n')
-    })
-});
-const db = getFirestore();
-
-let ignoreList: DocumentData | undefined;
-const initIgnoreList = async ():Promise<void> => {
-    const initData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-    const listInitData = await initData.get();
-    ignoreList = listInitData.data();
-}
-initIgnoreList();
+import { firebaseData,ignoreList,db } from "./database";
+import initIgnoreList from "./database";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
