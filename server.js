@@ -52,7 +52,6 @@ const initIgnoreList = () => __awaiter(void 0, void 0, void 0, function* () {
     const initData = db.collection("ignoreList").doc("main");
     const listInitData = yield initData.get();
     ignoreList = listInitData.data();
-    console.log(ignoreList); //Debugging-1
 });
 initIgnoreList();
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
