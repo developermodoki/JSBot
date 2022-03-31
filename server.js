@@ -30,7 +30,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const builders_1 = require("@discordjs/builders");
@@ -38,22 +37,8 @@ const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
 const axios_1 = __importDefault(require("axios"));
 const firebase = __importStar(require("firebase-admin"));
-const firestore_1 = require("firebase-admin/firestore");
-firebase.initializeApp({
-    credential: firebase.credential.cert({
-        projectId: process.env.FIREBASE_ID,
-        clientEmail: process.env.FIREBASE_CLIENT,
-        privateKey: (_a = process.env.FIREBASE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, '\n')
-    })
-});
-const db = (0, firestore_1.getFirestore)();
-let ignoreList;
-const initIgnoreList = () => __awaiter(void 0, void 0, void 0, function* () {
-    const initData = db.collection("ignoreList").doc("main");
-    const listInitData = yield initData.get();
-    ignoreList = listInitData.data();
-});
-initIgnoreList();
+const database_1 = require("./database");
+const database_2 = __importDefault(require("./database"));
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
 const commands = [
@@ -79,7 +64,7 @@ client.on("guildCreate", guild => {
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
     if (!inter.isCommand())
         return;
-    if (ignoreList === null || ignoreList === void 0 ? void 0 : ignoreList.list.includes(inter.user.id))
+    if (database_1.ignoreList === null || database_1.ignoreList === void 0 ? void 0 : database_1.ignoreList.list.includes(inter.user.id))
         return;
     if (inter.commandName === "runjs") {
         /*
@@ -139,15 +124,15 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
             yield inter.reply("Can't ignore Admin");
         }
         yield inter.reply("OK");
-        const banData = db.collection("ignoreList").doc("main");
+        const banData = database_1.db.collection("ignoreList").doc("main");
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
             yield banData.set({ list: [inter.options.getString("ignoreid")] });
-            yield initIgnoreList();
+            yield (0, database_2.default)();
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid")) });
-            yield initIgnoreList();
+            yield (0, database_2.default)();
         }
     }
     if (inter.commandName === "unignoreuser") {
@@ -155,15 +140,15 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
             inter.reply("You don't have permission to run this command.");
         }
         yield inter.reply("OK");
-        const banData = db.collection("ignoreList").doc("main");
+        const banData = database_1.db.collection("ignoreList").doc("main");
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
             void 0;
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid")) });
-            initIgnoreList();
-            console.log(ignoreList);
+            (0, database_2.default)();
+            console.log(database_1.ignoreList);
         }
     }
 }));
@@ -171,7 +156,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
 // messages
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
-    if (ignoreList === null || ignoreList === void 0 ? void 0 : ignoreList.list.includes(message.author.id))
+    if (database_1.ignoreList === null || database_1.ignoreList === void 0 ? void 0 : database_1.ignoreList.list.includes(message.author.id))
         return;
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = (_b = message.guild) === null || _b === void 0 ? void 0 : _b.emojis.cache.find(element => element.name === "JS");
