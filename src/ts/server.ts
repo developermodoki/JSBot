@@ -20,11 +20,13 @@ firebase.initializeApp({
 const db = getFirestore();
 
 let ignoreList: DocumentData | undefined;
-(async () => {
+const initIgnoreList = async ():Promise<void> => {
     const initData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
     const listInitData = await initData.get();
-    let ignoreList = listInitData.data();
-})();
+    ignoreList = listInitData.data();
+    console.log(ignoreList);//Debugging-1
+}
+initIgnoreList();
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
@@ -140,14 +142,10 @@ client.on("interactionCreate", async inter => {
           const banDoc = await banData.get();
           if(!banDoc.exists) {
               await banData.set({list:[inter.options.getString("ignoreid") as string]});
-              const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-              const listChangeData = await changeData.get();
-              ignoreList = listChangeData.data();
+              await initIgnoreList();
           } else {
               await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid"))});
-              const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-              const listChangeData = await changeData.get();
-              ignoreList = listChangeData.data();
+              await initIgnoreList();
           }
       }
     if(inter.commandName === "unignoreuser") {
@@ -161,9 +159,7 @@ client.on("interactionCreate", async inter => {
             void 0;
         } else {
             await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
-            const changeData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-            const listChangeData = await changeData.get();
-            ignoreList = listChangeData.data();
+            initIgnoreList();
             console.log(ignoreList);
         }
       }
