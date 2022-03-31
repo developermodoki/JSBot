@@ -24,7 +24,6 @@ const initIgnoreList = async ():Promise<void> => {
     const initData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
     const listInitData = await initData.get();
     ignoreList = listInitData.data();
-    console.log(ignoreList);//Debugging-1
 }
 initIgnoreList();
 
