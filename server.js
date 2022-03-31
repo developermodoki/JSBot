@@ -48,11 +48,13 @@ firebase.initializeApp({
 });
 const db = (0, firestore_1.getFirestore)();
 let ignoreList;
-(() => __awaiter(void 0, void 0, void 0, function* () {
+const initIgnoreList = () => __awaiter(void 0, void 0, void 0, function* () {
     const initData = db.collection("ignoreList").doc("main");
     const listInitData = yield initData.get();
-    let ignoreList = listInitData.data();
-}))();
+    ignoreList = listInitData.data();
+    console.log(ignoreList); //Debugging-1
+});
+initIgnoreList();
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
 const commands = [
@@ -142,15 +144,11 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         const banDoc = yield banData.get();
         if (!banDoc.exists) {
             yield banData.set({ list: [inter.options.getString("ignoreid")] });
-            const changeData = db.collection("ignoreList").doc("main");
-            const listChangeData = yield changeData.get();
-            ignoreList = listChangeData.data();
+            yield initIgnoreList();
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid")) });
-            const changeData = db.collection("ignoreList").doc("main");
-            const listChangeData = yield changeData.get();
-            ignoreList = listChangeData.data();
+            yield initIgnoreList();
         }
     }
     if (inter.commandName === "unignoreuser") {
@@ -165,9 +163,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         }
         else {
             yield banData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid")) });
-            const changeData = db.collection("ignoreList").doc("main");
-            const listChangeData = yield changeData.get();
-            ignoreList = listChangeData.data();
+            initIgnoreList();
             console.log(ignoreList);
         }
     }
