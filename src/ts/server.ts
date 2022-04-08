@@ -9,6 +9,7 @@ import { DocumentData, getFirestore } from "firebase-admin/firestore";
 import { firebaseData,ignoreList,db } from "./database";
 import initIgnoreList from "./database";
 
+// 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
     documents:Array<
