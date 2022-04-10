@@ -29,7 +29,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ignoreList = exports.db = void 0;
+exports.initIgnoreChannelList = exports.initIgnoreList = exports.ignoreChannelList = exports.ignoreList = exports.db = void 0;
 const firebase = __importStar(require("firebase-admin"));
 const firestore_1 = require("firebase-admin/firestore");
 firebase.initializeApp({
@@ -40,9 +40,19 @@ firebase.initializeApp({
     })
 });
 exports.db = (0, firestore_1.getFirestore)();
-const initIgnoreList = () => __awaiter(void 0, void 0, void 0, function* () {
-    const initData = exports.db.collection("ignoreList").doc("main");
-    const listInitData = yield initData.get();
-    exports.ignoreList = listInitData.data();
-});
-exports.default = initIgnoreList;
+function initIgnoreList() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const initData = exports.db.collection("ignoreList").doc("main");
+        const listInitData = yield initData.get();
+        exports.ignoreList = listInitData.data();
+    });
+}
+exports.initIgnoreList = initIgnoreList;
+function initIgnoreChannelList() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const initData = exports.db.collection("ignoreChannelList").doc("main");
+        const listInitData = yield initData.get();
+        exports.ignoreChannelList = listInitData.data();
+    });
+}
+exports.initIgnoreChannelList = initIgnoreChannelList;
