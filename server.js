@@ -53,6 +53,7 @@ const commands = [
 ];
 const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
 (0, database_2.initIgnoreList)();
+(0, database_2.initIgnoreChannelList)();
 client.on("ready", () => {
     console.log("This Bot is ready");
 });
@@ -194,6 +195,8 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
 client.on("messageCreate", (message) => {
     var _a, _b, _c, _d;
     if (database_1.ignoreList === null || database_1.ignoreList === void 0 ? void 0 : database_1.ignoreList.list.includes(message.author.id))
+        return;
+    if (database_1.ignoreChannelList === null || database_1.ignoreChannelList === void 0 ? void 0 : database_1.ignoreChannelList.list.includes(message.channelId))
         return;
     const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = (_b = message.guild) === null || _b === void 0 ? void 0 : _b.emojis.cache.find(element => element.name === "JS");
