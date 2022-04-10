@@ -6,8 +6,8 @@ import axios from "axios";
 import { VM } from "vm2";
 import * as firebase from "firebase-admin";
 import { DocumentData, getFirestore } from "firebase-admin/firestore";
-import { firebaseData,ignoreList,db } from "./database";
-import initIgnoreList from "./database";
+import { firebaseData,ignoreList,db,ignoreChannelList } from "./database";
+import { initIgnoreList, initIgnoreChannelList } from "./database";
 
 // 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
@@ -42,11 +42,13 @@ const commands = [
     new SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
     new SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true)),
     new SlashCommandBuilder().setName("ignoreuser").setDescription("Ignore any users(bot level)").addStringOption(opt => opt.setName("ignoreid").setDescription("User ID").setRequired(true)),
-    new SlashCommandBuilder().setName("unignoreuser").setDescription("Unignore any users(bot level)").addStringOption(opt => opt.setName("unignoreid").setDescription("User ID").setRequired(true))
+    new SlashCommandBuilder().setName("unignoreuser").setDescription("Unignore any users(bot level)").addStringOption(opt => opt.setName("unignoreid").setDescription("User ID").setRequired(true)),
+    new SlashCommandBuilder().setName("ignorechannel").setDescription("Ignore any channels").addStringOption(opt => opt.setName("ignorechannelid").setDescription("Channnel ID").setRequired(true)),
+    new SlashCommandBuilder().setName("unignorechannel").setDescription("Unignore any channels").addStringOption(opt => opt.setName("unignorechannelid").setDescription("Channel ID").setRequired(true))
 ];
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
-
+initIgnoreList();
 client.on("ready",() => {
     console.log("This Bot is ready");
 });
@@ -121,13 +123,13 @@ client.on("interactionCreate", async inter => {
             await inter.reply("Can't ignore Admin");
         }
         await inter.reply("OK");
-          const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-          const banDoc = await banData.get();
-          if(!banDoc.exists) {
-              await banData.set({list:[inter.options.getString("ignoreid") as string]});
+          const ignoreData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+          const ignoreDoc = await ignoreData.get();
+          if(!ignoreDoc.exists) {
+              await ignoreData.set({list:[inter.options.getString("ignoreid") as string]});
               await initIgnoreList();
           } else {
-              await banData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid"))});
+              await ignoreData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid"))});
               await initIgnoreList();
           }
       }
@@ -136,16 +138,46 @@ client.on("interactionCreate", async inter => {
             inter.reply("You don't have permission to run this command.");
         }
         await inter.reply("OK");
-        const banData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-        const banDoc = await banData.get();
-        if(!banDoc.exists){
+        const ignoreData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+        const ignoreDoc = await ignoreData.get();
+        if(!ignoreDoc.exists){
             void 0;
         } else {
-            await banData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
+            await ignoreData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid"))});
             initIgnoreList();
-            console.log(ignoreList);
+            console.log(ignoreChannelList);
         }
-      }
+    }
+    if(inter.commandName === "ignorechannel") {
+        if(inter.user.id !== process.env.ADMIN_ID){
+            await inter.reply("You don't have permission to run this command.");
+        }
+        await inter.reply("OK");
+        const ignoreData = db.collection("ignoreChannelList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+        const ignoreDoc = await ignoreData.get();
+        if(!ignoreDoc.exists) {
+            await ignoreData.set({list:[inter.options.getString("ignorechannelid") as string]});
+            await initIgnoreChannelList();
+        } else {
+            await ignoreData.update({list:firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignorechannelid"))});
+            await initIgnoreChannelList();
+        }
+    }
+    if(inter.commandName === "unignorechannel") {
+        if(inter.user.id !== process.env.ADMIN_ID) {
+            inter.reply("You don't have permission to run this command.");
+        }
+        await inter.reply("OK");
+        const ignoreData = db.collection("ignoreChannelList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+        const ignoreDoc = await ignoreData.get();
+        if(!ignoreDoc.exists){
+            void 0;
+        } else {
+            await ignoreData.update({list:firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignorechannelid"))});
+            initIgnoreChannelList();
+            console.log(ignoreChannelList);
+        }
+    }
 });
 
 //const test = (/^([Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT])$/.test("JavaScript"))

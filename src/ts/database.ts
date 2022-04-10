@@ -15,10 +15,14 @@ firebase.initializeApp({
 export const db = getFirestore();
 
 export let ignoreList: DocumentData | undefined;
-const initIgnoreList = async ():Promise<void> => {
+export let ignoreChannelList: DocumentData | undefined;
+export async function initIgnoreList():Promise<void>{
     const initData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
     const listInitData = await initData.get();
     ignoreList = listInitData.data();
 }
-
-export default initIgnoreList;
+export async function initIgnoreChannelList():Promise<void> {
+    const initData = db.collection("ignoreChannelList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
+    const listInitData = await initData.get();
+    ignoreChannelList = listInitData.data();
+}
