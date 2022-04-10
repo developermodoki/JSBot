@@ -89,7 +89,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
         // const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         const result = mdnApiResponse;
-        if (result) {
+        if (result && result.documents.length !== 0) {
             yield inter.reply({ embeds: [{
                         color: 16776960,
                         title: "Result",
