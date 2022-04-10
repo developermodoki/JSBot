@@ -49,6 +49,7 @@ const commands = [
 
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
 initIgnoreList();
+initIgnoreChannelList();
 client.on("ready",() => {
     console.log("This Bot is ready");
 });
@@ -185,7 +186,7 @@ client.on("interactionCreate", async inter => {
 // messages
 client.on("messageCreate",(message:Message) => {
     if(ignoreList?.list.includes(message.author.id)) return;
-
+    if(ignoreChannelList?.list.includes(message.channelId)) return;
     const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
     const findJSemoji2 = message.guild?.emojis.cache.find(element => element.name === "JS");
 
