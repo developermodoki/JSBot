@@ -86,7 +86,6 @@ client.on("interactionCreate", async inter => {
     if(inter.commandName === "searchmdn") {
         const mdnRes = await axios.get<mdnResponse>(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse:mdnResponse = JSON.parse(JSON.stringify(mdnRes.data));
-        // const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         const result = mdnApiResponse;
         if (result && result.documents.length !== 0) {
             await inter.reply({embeds:[{
@@ -118,7 +117,7 @@ client.on("interactionCreate", async inter => {
     }
     if(inter.commandName === "ignoreuser") {
         if(inter.user.id !== process.env.ADMIN_ID){
-            await inter.reply("You don't have permission to run this command.");
+            await inter.reply("You don't have the permission to run this command.");
         }
         if(inter.options.getString("ignoreid") === process.env.ADMIN_ID) {
             await inter.reply("Can't ignore Admin");
@@ -136,7 +135,7 @@ client.on("interactionCreate", async inter => {
       }
     if(inter.commandName === "unignoreuser") {
         if(inter.user.id !== process.env.ADMIN_ID) {
-            inter.reply("You don't have permission to run this command.");
+            inter.reply("You don't have the permission to run this command.");
         }
         await inter.reply("OK");
         const ignoreData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
@@ -151,7 +150,7 @@ client.on("interactionCreate", async inter => {
     }
     if(inter.commandName === "ignorechannel") {
         if(inter.user.id !== process.env.ADMIN_ID){
-            await inter.reply("You don't have permission to run this command.");
+            await inter.reply("You don't have the permission to run this command.");
         }
         await inter.reply("OK");
         const ignoreData = db.collection("ignoreChannelList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
@@ -166,7 +165,7 @@ client.on("interactionCreate", async inter => {
     }
     if(inter.commandName === "unignorechannel") {
         if(inter.user.id !== process.env.ADMIN_ID) {
-            inter.reply("You don't have permission to run this command.");
+            inter.reply("You don't have the permission to run this command.");
         }
         await inter.reply("OK");
         const ignoreData = db.collection("ignoreChannelList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
