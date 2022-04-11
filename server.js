@@ -91,7 +91,6 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (inter.commandName === "searchmdn") {
         const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
         const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
-        // const result = mdnApiResponse.documents.find(element => element.title === inter.options.getString("mdnword"));
         const result = mdnApiResponse;
         if (result && result.documents.length !== 0) {
             yield inter.reply({ embeds: [{
@@ -124,7 +123,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     }
     if (inter.commandName === "ignoreuser") {
         if (inter.user.id !== process.env.ADMIN_ID) {
-            yield inter.reply("You don't have permission to run this command.");
+            yield inter.reply("You don't have the permission to run this command.");
         }
         if (inter.options.getString("ignoreid") === process.env.ADMIN_ID) {
             yield inter.reply("Can't ignore Admin");
@@ -143,7 +142,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     }
     if (inter.commandName === "unignoreuser") {
         if (inter.user.id !== process.env.ADMIN_ID) {
-            inter.reply("You don't have permission to run this command.");
+            inter.reply("You don't have the permission to run this command.");
         }
         yield inter.reply("OK");
         const ignoreData = database_1.db.collection("ignoreList").doc("main");
@@ -159,7 +158,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     }
     if (inter.commandName === "ignorechannel") {
         if (inter.user.id !== process.env.ADMIN_ID) {
-            yield inter.reply("You don't have permission to run this command.");
+            yield inter.reply("You don't have the permission to run this command.");
         }
         yield inter.reply("OK");
         const ignoreData = database_1.db.collection("ignoreChannelList").doc("main");
@@ -175,7 +174,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     }
     if (inter.commandName === "unignorechannel") {
         if (inter.user.id !== process.env.ADMIN_ID) {
-            inter.reply("You don't have permission to run this command.");
+            inter.reply("You don't have the permission to run this command.");
         }
         yield inter.reply("OK");
         const ignoreData = database_1.db.collection("ignoreChannelList").doc("main");
