@@ -54,7 +54,6 @@ initIgnoreChannelList();
 client.on("ready",bot => {
     console.log("This Bot is ready");
     bot.user.setActivity("Running on Node.js v16.x",{ type:"WATCHING" });
-
 });
 
 client.on("guildCreate",guild => {
