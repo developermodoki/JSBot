@@ -10,7 +10,7 @@ import { firebaseData,ignoreList,db,ignoreChannelList } from "./database";
 import { initIgnoreList, initIgnoreChannelList } from "./database";
 import * as util from "util";
 
-// 
+
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
     documents:Array<
@@ -51,8 +51,10 @@ const commands = [
 const rest = new REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN as string);
 initIgnoreList();
 initIgnoreChannelList();
-client.on("ready",() => {
+client.on("ready",bot => {
     console.log("This Bot is ready");
+    bot.user.setActivity("Running on Node.js v16.x",{ type:"WATCHING" });
+
 });
 
 client.on("guildCreate",guild => {
