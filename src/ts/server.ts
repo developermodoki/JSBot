@@ -53,7 +53,6 @@ initIgnoreList();
 initIgnoreChannelList();
 client.on("ready",bot => {
     console.log("This Bot is ready");
-    bot.user.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`,{ type:"WATCHING" });
 });
 
 setInterval(() => {
