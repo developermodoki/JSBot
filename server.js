@@ -57,8 +57,12 @@ const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKE
 (0, database_2.initIgnoreChannelList)();
 client.on("ready", bot => {
     console.log("This Bot is ready");
-    bot.user.setActivity("Running on Node.js v16.x", { type: "WATCHING" });
+    bot.user.setActivity(`${client.ws.ping}ms | Node.js v16.x`, { type: "WATCHING" });
 });
+setInterval(() => {
+    var _a;
+    (_a = client.user) === null || _a === void 0 ? void 0 : _a.setActivity(`${client.ws.ping}ms | Node.js v16.x`, { type: "WATCHING" });
+}, 900000);
 client.on("guildCreate", guild => {
     var _a;
     const checkJSemoji = guild.emojis.cache.find(element => element.name === "js");
