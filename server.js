@@ -57,7 +57,6 @@ const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKE
 (0, database_2.initIgnoreChannelList)();
 client.on("ready", bot => {
     console.log("This Bot is ready");
-    bot.user.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type: "WATCHING" });
 });
 setInterval(() => {
     var _a;
