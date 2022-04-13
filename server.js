@@ -80,7 +80,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
             sandbox: {
                 console: {
                     log: (...args) => {
-                        console.log(args);
+                        return args;
                     }
                 }
             }
