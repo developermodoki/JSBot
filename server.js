@@ -78,7 +78,11 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         const vm = new vm2_1.VM({
             timeout: 1000,
             sandbox: {
-                console
+                console: {
+                    log: (...args) => {
+                        console.log(args);
+                    }
+                }
             }
         });
         try {
