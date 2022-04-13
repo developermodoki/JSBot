@@ -76,14 +76,7 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
         return;
     if (inter.commandName === "runjs") {
         const vm = new vm2_1.VM({
-            timeout: 1000,
-            sandbox: {
-                console: {
-                    log: (...args) => {
-                        return args;
-                    }
-                }
-            }
+            timeout: 1000
         });
         try {
             const evalResult = vm.run(inter.options.getString("code"));
