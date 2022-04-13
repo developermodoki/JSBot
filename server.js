@@ -41,7 +41,6 @@ const firebase = __importStar(require("firebase-admin"));
 const database_1 = require("./database");
 const database_2 = require("./database");
 const util = __importStar(require("util"));
-const { Console } = console;
 // 
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
