@@ -70,7 +70,11 @@ client.on("interactionCreate", async inter => {
          const vm = new VM({
             timeout:1000,
             sandbox: {
-              console
+              console: {
+                  log: (...args:any) => {
+                      console.log(args)
+                  }
+              }
             }
          });
          try {
