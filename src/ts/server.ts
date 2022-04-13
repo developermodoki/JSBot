@@ -68,14 +68,7 @@ client.on("interactionCreate", async inter => {
     if(ignoreList?.list.includes(inter.user.id)) return;
     if(inter.commandName === "runjs") {
          const vm = new VM({
-            timeout:1000,
-            sandbox: {
-              console: {
-                  log: (...args:any) => {
-                      return args
-                  }
-              }
-            }
+            timeout:1000
          });
          try {
             const evalResult = vm.run(inter.options.getString("code") as string);
