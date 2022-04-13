@@ -9,7 +9,7 @@ import { DocumentData, getFirestore } from "firebase-admin/firestore";
 import { firebaseData,ignoreList,db,ignoreChannelList } from "./database";
 import { initIgnoreList, initIgnoreChannelList } from "./database";
 import * as util from "util";
-const { Console } = console;
+
 // 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
