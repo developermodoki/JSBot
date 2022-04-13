@@ -1,5 +1,5 @@
 import { Message,Client,Intents } from "discord.js";
-import { SlashCommandBuilder } from "@discordjs/builders";
+import { codeBlock, SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import axios from "axios";
@@ -8,7 +8,8 @@ import * as firebase from "firebase-admin";
 import { DocumentData, getFirestore } from "firebase-admin/firestore";
 import { firebaseData,ignoreList,db,ignoreChannelList } from "./database";
 import { initIgnoreList, initIgnoreChannelList } from "./database";
-
+import * as util from "util";
+const { Console } = console;
 // 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
@@ -61,24 +62,23 @@ client.on("guildCreate",guild => {
     rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
         .then(() => void 0)
         .catch(error => console.log(error));
-})
-
+});
 client.on("interactionCreate", async inter => {
     if(!inter.isCommand()) return;
     if(ignoreList?.list.includes(inter.user.id)) return;
     if(inter.commandName === "runjs") {
-        /*
-         const vm = new VM({timeout:1000});
+         const vm = new VM({
+            timeout:1000,
+            sandbox: {
+              console
+            }
+         });
          try {
-            const result = vm.run(inter.options.getString("code") as string);
-            await inter.channel?.send({
-                content:result
-            })
-         } catch(e) {
-             await inter.channel?.send(e as string)
+            const evalResult = vm.run(inter.options.getString("code") as string);
+            inter.reply("```" + util.inspect(evalResult) + "```");
+         } catch (e) {
+             inter.reply("```" + e + "```");
          }
-         */
-         await inter.reply("This feature is under development");
     } 
     if(inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? await inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
