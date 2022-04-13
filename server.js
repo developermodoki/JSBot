@@ -36,9 +36,12 @@ const builders_1 = require("@discordjs/builders");
 const rest_1 = require("@discordjs/rest");
 const v9_1 = require("discord-api-types/v9");
 const axios_1 = __importDefault(require("axios"));
+const vm2_1 = require("vm2");
 const firebase = __importStar(require("firebase-admin"));
 const database_1 = require("./database");
 const database_2 = require("./database");
+const util = __importStar(require("util"));
+const { Console } = console;
 // 
 const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
 ;
@@ -72,18 +75,19 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
     if (database_1.ignoreList === null || database_1.ignoreList === void 0 ? void 0 : database_1.ignoreList.list.includes(inter.user.id))
         return;
     if (inter.commandName === "runjs") {
-        /*
-         const vm = new VM({timeout:1000});
-         try {
-            const result = vm.run(inter.options.getString("code") as string);
-            await inter.channel?.send({
-                content:result
-            })
-         } catch(e) {
-             await inter.channel?.send(e as string)
-         }
-         */
-        yield inter.reply("This feature is under development");
+        const vm = new vm2_1.VM({
+            timeout: 1000,
+            sandbox: {
+                console
+            }
+        });
+        try {
+            const evalResult = vm.run(inter.options.getString("code"));
+            inter.reply("```" + util.inspect(evalResult) + "```");
+        }
+        catch (e) {
+            inter.reply("```" + e + "```");
+        }
     }
     if (inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
