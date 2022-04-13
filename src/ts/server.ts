@@ -72,7 +72,7 @@ client.on("interactionCreate", async inter => {
             sandbox: {
               console: {
                   log: (...args:any) => {
-                      console.log(args)
+                      return args
                   }
               }
             }
