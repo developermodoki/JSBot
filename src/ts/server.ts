@@ -53,11 +53,11 @@ initIgnoreList();
 initIgnoreChannelList();
 client.on("ready",bot => {
     console.log("This Bot is ready");
-    bot.user.setActivity(`${client.ws.ping}ms | Node.js v16.x`,{ type:"WATCHING" });
+    bot.user.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`,{ type:"WATCHING" });
 });
 
 setInterval(() => {
-    client.user?.setActivity(`${client.ws.ping}ms | Node.js v16.x`,{ type:"WATCHING" });
+    client.user?.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`,{ type:"WATCHING" });
 },900000)
 
 client.on("guildCreate",guild => {
