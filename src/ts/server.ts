@@ -53,11 +53,12 @@ initIgnoreList();
 initIgnoreChannelList();
 client.on("ready",bot => {
     console.log("This Bot is ready");
+    bot.user.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type:"WATCHING" });
 });
 
 setInterval(() => {
     client.user?.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`,{ type:"WATCHING" });
-},900000)
+},600000)
 
 client.on("guildCreate",guild => {
     const checkJSemoji = guild.emojis.cache.find(element => element.name === "js");
@@ -76,7 +77,7 @@ client.on("interactionCreate", async inter => {
          });
          try {
             const evalResult = vm.run(inter.options.getString("code") as string);
-            inter.reply("```" + util.inspect(evalResult) + "```");
+            inter.reply("```js\n" + util.inspect(evalResult) + "```");
          } catch (e) {
              inter.reply("```" + e + "```");
          }
