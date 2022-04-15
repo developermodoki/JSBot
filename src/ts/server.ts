@@ -13,7 +13,7 @@ import * as util from "util";
 
 const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
 interface mdnResponse {
-    documents:Array<
+    readonly documents:Array<
       {
           mdn_url:string,
           socre:number,
@@ -28,13 +28,13 @@ interface mdnResponse {
           },
       }
     >,
-    metadata: {
+    readonly metadata: {
         took_ms:number,
         total: {value:number,relation:string},
         size:number,
         page:number
     },
-    suggestions: Array<any>
+    readonly suggestions: Array<any>
 };
 
 
