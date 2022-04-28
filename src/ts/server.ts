@@ -63,9 +63,6 @@ setInterval(() => {
 },600000)
 
 client.on("guildCreate",guild => {
-    const checkJSemoji = guild.emojis.cache.find(element => element.name === "js");
-    const checkJSemoji2 = guild.emojis.cache.find(element => element.name === "JS");
-    checkJSemoji ? void 0 : (checkJSemoji2 ? void 0 : (guild.me?.permissions.has("MANAGE_EMOJIS_AND_STICKERS") ? guild.emojis.create("https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png","js") : void 0));
     rest.put(Routes.applicationGuildCommands(process.env.BOT_ID as string, guild.id.toString()), {body:commands})
         .then(() => void 0)
         .catch(error => console.log(error));
@@ -190,14 +187,11 @@ client.on("interactionCreate", async inter => {
 client.on("messageCreate",(message:Message) => {
     if(ignoreList?.list.includes(message.author.id)) return;
     if(ignoreChannelList?.list.includes(message.channelId)) return;
-    const findJSemoji = message.guild?.emojis.cache.find(element => element.name === "js");
-    const findJSemoji2 = message.guild?.emojis.cache.find(element => element.name === "JS");
-
     if (message.author.bot) return;
 
     if (message.guild?.me?.permissions.has("SEND_MESSAGES")){
         if(message.content.match(/[Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT]/)) {
-            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
+           message.react(process.env.JS_EMOJI_ID as string)
         }
     } else {
         return;
