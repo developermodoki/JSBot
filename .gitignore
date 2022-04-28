@@ -104,3 +104,4 @@ dist/server.js
 .tern-port
 
 server.js
+.git/
