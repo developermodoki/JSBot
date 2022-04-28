@@ -66,10 +66,6 @@ setInterval(() => {
     (_a = client.user) === null || _a === void 0 ? void 0 : _a.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type: "WATCHING" });
 }, 600000);
 client.on("guildCreate", guild => {
-    var _a;
-    const checkJSemoji = guild.emojis.cache.find(element => element.name === "js");
-    const checkJSemoji2 = guild.emojis.cache.find(element => element.name === "JS");
-    checkJSemoji ? void 0 : (checkJSemoji2 ? void 0 : (((_a = guild.me) === null || _a === void 0 ? void 0 : _a.permissions.has("MANAGE_EMOJIS_AND_STICKERS")) ? guild.emojis.create("https://raw.githubusercontent.com/voodootikigod/logo.js/master/js.png", "js") : void 0));
     rest.put(v9_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
         .then(() => void 0)
         .catch(error => console.log(error));
@@ -198,18 +194,16 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
 //const test = (/^([Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT])$/.test("JavaScript"))
 // messages
 client.on("messageCreate", (message) => {
-    var _a, _b, _c, _d;
+    var _a, _b;
     if (database_1.ignoreList === null || database_1.ignoreList === void 0 ? void 0 : database_1.ignoreList.list.includes(message.author.id))
         return;
     if (database_1.ignoreChannelList === null || database_1.ignoreChannelList === void 0 ? void 0 : database_1.ignoreChannelList.list.includes(message.channelId))
         return;
-    const findJSemoji = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.emojis.cache.find(element => element.name === "js");
-    const findJSemoji2 = (_b = message.guild) === null || _b === void 0 ? void 0 : _b.emojis.cache.find(element => element.name === "JS");
     if (message.author.bot)
         return;
-    if ((_d = (_c = message.guild) === null || _c === void 0 ? void 0 : _c.me) === null || _d === void 0 ? void 0 : _d.permissions.has("SEND_MESSAGES")) {
+    if ((_b = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.me) === null || _b === void 0 ? void 0 : _b.permissions.has("SEND_MESSAGES")) {
         if (message.content.match(/[Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT]/)) {
-            findJSemoji ? message.react(findJSemoji.toString()) : (findJSemoji2 ? message.react(findJSemoji2.toString()) : void 0);
+            message.react(process.env.JS_EMOJI_ID);
         }
     }
     else {
