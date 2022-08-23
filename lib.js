@@ -61,6 +61,7 @@ const updateignoreUserList = (userId, type) => __awaiter(void 0, void 0, void 0,
         const ignoreData = database_1.db.collection("ignoreList").doc("main");
         const ignoreDoc = yield ignoreData.get();
         const query = yield database_1.db.collection("ignoreList").where("main", "in", [userId]).get();
+        // ここから
         if (!ignoreDoc.exists) {
             yield ignoreData.set({ list: [userId] });
             (0, database_2.initIgnoreList)();
@@ -75,6 +76,7 @@ const updateignoreUserList = (userId, type) => __awaiter(void 0, void 0, void 0,
         }
     }
     else {
+        // ここから
         const ignoreData = database_1.db.collection("ignoreList").doc("main");
         const ignoreDoc = yield ignoreData.get();
         const query = yield database_1.db.collection("ignoreList").where("main", "in", [userId]).get();
