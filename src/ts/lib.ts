@@ -58,6 +58,7 @@ export const updateignoreUserList = async (userId: string, type: "ADD" | "REMOVE
 
         const query = await db.collection("ignoreList").where("main", "in", [userId]).get();
 
+        // ここから
         if(!ignoreDoc.exists) {
             await ignoreData.set({list: [userId]});
             initIgnoreList();
@@ -71,6 +72,7 @@ export const updateignoreUserList = async (userId: string, type: "ADD" | "REMOVE
         }
 
     } else {
+        // ここから
         const ignoreData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
         const ignoreDoc = await ignoreData.get();
 
