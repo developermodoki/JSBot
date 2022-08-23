@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -32,49 +36,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
-const builders_1 = require("@discordjs/builders");
-const rest_1 = require("@discordjs/rest");
-const v9_1 = require("discord-api-types/v9");
+const lib_1 = require("./lib");
 const axios_1 = __importDefault(require("axios"));
 const vm2_1 = require("vm2");
 const firebase = __importStar(require("firebase-admin"));
 const database_1 = require("./database");
 const database_2 = require("./database");
 const util = __importStar(require("util"));
-const client = new discord_js_1.Client({ intents: [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.DIRECT_MESSAGES, discord_js_1.Intents.FLAGS.GUILD_MESSAGES] });
-;
-const commands = [
-    new builders_1.SlashCommandBuilder().setName("runjs").setDescription("Run JavaScript's code").addStringOption(opt => opt.setName("code").setDescription("Program Code").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("searchstack").setDescription("Search Stack Overflow").addStringOption(opt => opt.setName("stackword").setDescription("word of Stack Overflow").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("searchmdn").setDescription("Search MDN").addStringOption(opt => opt.setName("mdnword").setDescription("Word of MDN").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("ignoreuser").setDescription("Ignore any users(bot level)").addStringOption(opt => opt.setName("ignoreid").setDescription("User ID").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("unignoreuser").setDescription("Unignore any users(bot level)").addStringOption(opt => opt.setName("unignoreid").setDescription("User ID").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("ignorechannel").setDescription("Ignore any channels").addStringOption(opt => opt.setName("ignorechannelid").setDescription("Channnel ID").setRequired(true)),
-    new builders_1.SlashCommandBuilder().setName("unignorechannel").setDescription("Unignore any channels").addStringOption(opt => opt.setName("unignorechannelid").setDescription("Channel ID").setRequired(true))
-];
-const rest = new rest_1.REST({ version: '9' }).setToken(process.env.DISCORD_TOKEN);
-(0, database_2.initIgnoreList)();
-(0, database_2.initIgnoreChannelList)();
+// v13 => const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.DIRECT_MESSAGES,Intents.FLAGS.GUILD_MESSAGES]});
+const Intents = discord_js_1.GatewayIntentBits;
+const client = new discord_js_1.Client({
+    intents: [
+        Intents.Guilds,
+        Intents.GuildMessages,
+        Intents.GuildEmojisAndStickers,
+        Intents.GuildMessageReactions
+    ]
+});
+/* Initialization setup & setting Activity */
 client.on("ready", bot => {
+    (0, database_1.initList)();
     console.log("This Bot is ready");
     setTimeout(() => {
-        bot.user.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type: "WATCHING" });
+        bot.user.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type: discord_js_1.ActivityType.Watching });
     }, 5000);
 });
+/* Update activity */
 setInterval(() => {
     var _a;
-    (_a = client.user) === null || _a === void 0 ? void 0 : _a.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type: "WATCHING" });
+    (_a = client.user) === null || _a === void 0 ? void 0 : _a.setActivity(`${client.ws.ping}ms | Node.js ${process.version}`, { type: discord_js_1.ActivityType.Watching });
 }, 600000);
 client.on("guildCreate", guild => {
-    rest.put(v9_1.Routes.applicationGuildCommands(process.env.BOT_ID, guild.id.toString()), { body: commands })
-        .then(() => void 0)
-        .catch(error => console.log(error));
+    (0, lib_1.setUpCommands)(guild.id.toString());
 });
 client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!inter.isCommand())
+    if (!inter.isChatInputCommand())
         return;
     if (database_1.ignoreList === null || database_1.ignoreList === void 0 ? void 0 : database_1.ignoreList.list.includes(inter.user.id))
         return;
+    // VM
     if (inter.commandName === "runjs") {
         const vm = new vm2_1.VM({
             timeout: 1000
@@ -87,25 +87,25 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
             inter.reply("```" + e + "```");
         }
     }
+    // Search Stack Overflow
     if (inter.commandName === "searchstack") {
         (inter.options.getString("stackword") !== null) ? yield inter.reply(`https://stackoverflow.com/search?q=${inter.options.getString("stackword")}`) : void 0;
     }
+    // Search MDN
     if (inter.commandName === "searchmdn") {
-        const mdnRes = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
-        const mdnApiResponse = JSON.parse(JSON.stringify(mdnRes.data));
-        const result = mdnApiResponse;
-        if (result && result.documents.length !== 0) {
+        const { data } = yield axios_1.default.get(`https://developer.mozilla.org/api/v1/search?q=${inter.options.getString("mdnword")}&locale=ja`);
+        if (data && data.documents.length !== 0) {
             yield inter.reply({ embeds: [{
                         color: 16776960,
                         title: "Result",
                         fields: [
                             {
-                                name: result.documents[0].title,
-                                value: result.documents[0].summary
+                                name: data.documents[0].title,
+                                value: data.documents[0].summary
                             },
                             {
                                 name: "URL",
-                                value: "https://developer.mozilla.org" + result.documents[0].mdn_url
+                                value: "https://developer.mozilla.org" + data.documents[0].mdn_url
                             }
                         ]
                     }] });
@@ -123,40 +123,43 @@ client.on("interactionCreate", (inter) => __awaiter(void 0, void 0, void 0, func
                     }] });
         }
     }
+    // Add Ignored users
     if (inter.commandName === "ignoreuser") {
         if (inter.user.id !== process.env.ADMIN_ID) {
             yield inter.reply("You don't have the permission to run this command.");
         }
         if (inter.options.getString("ignoreid") === process.env.ADMIN_ID) {
-            yield inter.reply("Can't ignore Admin");
+            yield inter.reply("Couldn't run this command because you are the administrator of this bot.");
         }
-        yield inter.reply("OK");
+        const userId = inter.options.getString("ignoreid");
+        yield inter.deferReply({ ephemeral: true });
         const ignoreData = database_1.db.collection("ignoreList").doc("main");
         const ignoreDoc = yield ignoreData.get();
         if (!ignoreDoc.exists) {
-            yield ignoreData.set({ list: [inter.options.getString("ignoreid")] });
-            yield (0, database_2.initIgnoreList)();
+            yield ignoreData.set({ list: [userId] });
         }
         else {
-            yield ignoreData.update({ list: firebase.firestore.FieldValue.arrayUnion(inter.options.getString("ignoreid")) });
-            yield (0, database_2.initIgnoreList)();
+            yield ignoreData.update({ list: firebase.firestore.FieldValue.arrayUnion(userId) });
         }
+        yield (0, database_2.initIgnoreList)();
+        yield inter.followUp({ content: `${(yield client.users.fetch(userId)).tag} has been added to the Ignore List`, ephemeral: true });
     }
     if (inter.commandName === "unignoreuser") {
         if (inter.user.id !== process.env.ADMIN_ID) {
             inter.reply("You don't have the permission to run this command.");
         }
-        yield inter.reply("OK");
+        yield inter.deferReply({ ephemeral: true });
+        const userId = inter.options.getString("unignoreid");
         const ignoreData = database_1.db.collection("ignoreList").doc("main");
         const ignoreDoc = yield ignoreData.get();
-        if (!ignoreDoc.exists) {
+        if (!ignoreDoc.exists)
             void 0;
-        }
         else {
-            yield ignoreData.update({ list: firebase.firestore.FieldValue.arrayRemove(inter.options.getString("unignoreid")) });
+            yield ignoreData.update({ list: firebase.firestore.FieldValue.arrayRemove(userId) });
             (0, database_2.initIgnoreList)();
             console.log(database_1.ignoreChannelList);
         }
+        yield inter.followUp({ content: `**${(yield client.users.fetch(userId)).tag}** has been removed from the Ignore List`, ephemeral: true });
     }
     if (inter.commandName === "ignorechannel") {
         if (inter.user.id !== process.env.ADMIN_ID) {
@@ -201,16 +204,12 @@ client.on("messageCreate", (message) => {
         return;
     if (message.author.bot)
         return;
-    if ((_b = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.me) === null || _b === void 0 ? void 0 : _b.permissions.has("SEND_MESSAGES")) {
+    if ((_b = (_a = message.guild) === null || _a === void 0 ? void 0 : _a.members.me) === null || _b === void 0 ? void 0 : _b.permissions.has(discord_js_1.PermissionFlagsBits.SendMessages)) {
         if (message.content.match(/[Jj][Ss]|[Jj][aA][vV][aA][Ss][cC][rR][iI][pP][tT]/)) {
             message.react(process.env.JS_EMOJI_ID);
         }
     }
-    else {
+    else
         return;
-    }
-    if (message.content.indexOf(process.env.WARN_WORD) !== -1) {
-        message.channel.send(`**WARNING: "JS" means JavaScript. It doesn't mean ${process.env.WARN_WORD}**`);
-    }
 });
 client.login(process.env.DISCORD_TOKEN);

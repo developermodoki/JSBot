@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -29,7 +33,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initIgnoreChannelList = exports.initIgnoreList = exports.ignoreChannelList = exports.ignoreList = exports.db = void 0;
+exports.initList = exports.initIgnoreChannelList = exports.initIgnoreList = exports.ignoreChannelList = exports.ignoreList = exports.db = void 0;
 const firebase = __importStar(require("firebase-admin"));
 const firestore_1 = require("firebase-admin/firestore");
 firebase.initializeApp({
@@ -40,19 +44,18 @@ firebase.initializeApp({
     })
 });
 exports.db = (0, firestore_1.getFirestore)();
-function initIgnoreList() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const initData = exports.db.collection("ignoreList").doc("main");
-        const listInitData = yield initData.get();
-        exports.ignoreList = listInitData.data();
-    });
-}
+const initIgnoreList = () => __awaiter(void 0, void 0, void 0, function* () {
+    const initData = exports.db.collection("ignoreList").doc("main");
+    exports.ignoreList = yield (yield initData.get()).data();
+});
 exports.initIgnoreList = initIgnoreList;
-function initIgnoreChannelList() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const initData = exports.db.collection("ignoreChannelList").doc("main");
-        const listInitData = yield initData.get();
-        exports.ignoreChannelList = listInitData.data();
-    });
-}
+const initIgnoreChannelList = () => __awaiter(void 0, void 0, void 0, function* () {
+    const initData = exports.db.collection("ignoreChannelList").doc("main");
+    exports.ignoreChannelList = yield (yield initData.get()).data();
+});
 exports.initIgnoreChannelList = initIgnoreChannelList;
+const initList = () => {
+    (0, exports.initIgnoreChannelList)();
+    (0, exports.initIgnoreList)();
+};
+exports.initList = initList;
