@@ -16,13 +16,19 @@ export const db = getFirestore();
 
 export let ignoreList: DocumentData | undefined;
 export let ignoreChannelList: DocumentData | undefined;
-export async function initIgnoreList():Promise<void>{
+
+
+export const initIgnoreList = async () => {
     const initData = db.collection("ignoreList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-    const listInitData = await initData.get();
-    ignoreList = listInitData.data();
+    ignoreList = await (await initData.get()).data();
 }
-export async function initIgnoreChannelList():Promise<void> {
+
+export const initIgnoreChannelList = async() => {
     const initData = db.collection("ignoreChannelList").doc("main") as firebase.firestore.DocumentReference<firebaseData>;
-    const listInitData = await initData.get();
-    ignoreChannelList = listInitData.data();
+    ignoreChannelList = await (await initData.get()).data();
+}
+
+export const initList = () => {
+    initIgnoreChannelList();
+    initIgnoreList();
 }

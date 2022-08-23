@@ -106,3 +106,4 @@ dist/server.js
 server.js
 database.js
 .git/
+*.code-workspace
